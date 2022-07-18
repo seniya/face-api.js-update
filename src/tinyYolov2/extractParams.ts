@@ -1,18 +1,16 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { extractConvParamsFactory } from '../common';
-import { extractSeparableConvParamsFactory } from '../common/extractSeparableConvParamsFactory';
-import { extractWeightsFactory } from '../common/extractWeightsFactory';
-import { ExtractWeightsFunction, ParamMapping } from '../common/types';
-import { TinyYolov2Config } from './config';
-import { BatchNorm, ConvWithBatchNorm, TinyYolov2NetParams } from './types';
+import { extractConvParamsFactory } from '../common'
+import { extractSeparableConvParamsFactory } from '../common/extractSeparableConvParamsFactory'
+import { extractWeightsFactory } from '../common/extractWeightsFactory'
+import { ExtractWeightsFunction, ParamMapping } from '../common/types'
+import { TinyYolov2Config } from './config'
+import { BatchNorm, ConvWithBatchNorm, TinyYolov2NetParams } from './types'
 
-function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings: ParamMapping[]) {
-
+function extractorsFactory (extractWeights: ExtractWeightsFunction, paramMappings: ParamMapping[]) {
   const extractConvParams = extractConvParamsFactory(extractWeights, paramMappings)
 
-  function extractBatchNormParams(size: number, mappedPrefix: string): BatchNorm {
-
+  function extractBatchNormParams (size: number, mappedPrefix: string): BatchNorm {
     const sub = tf.tensor1d(extractWeights(size))
     const truediv = tf.tensor1d(extractWeights(size))
 
@@ -24,8 +22,7 @@ function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings
     return { sub, truediv }
   }
 
-  function extractConvWithBatchNormParams(channelsIn: number, channelsOut: number, mappedPrefix: string): ConvWithBatchNorm {
-
+  function extractConvWithBatchNormParams (channelsIn: number, channelsOut: number, mappedPrefix: string): ConvWithBatchNorm {
     const conv = extractConvParams(channelsIn, channelsOut, 3, `${mappedPrefix}/conv`)
     const bn = extractBatchNormParams(channelsOut, `${mappedPrefix}/bn`)
 
@@ -38,16 +35,14 @@ function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings
     extractConvWithBatchNormParams,
     extractSeparableConvParams
   }
-
 }
 
-export function extractParams(
+export function extractParams (
   weights: Float32Array,
   config: TinyYolov2Config,
   boxEncodingSize: number,
   filterSizes: number[]
 ): { params: TinyYolov2NetParams, paramMappings: ParamMapping[] } {
-
   const {
     extractWeights,
     getRemainingWeights
@@ -80,7 +75,7 @@ export function extractParams(
     params = { conv0, conv1, conv2, conv3, conv4, conv5, conv6, conv7, conv8 }
   } else {
     const [s0, s1, s2, s3, s4, s5, s6, s7, s8] = filterSizes
-    const conv0 = extractConvWithBatchNormParams(s0, s1, 'conv0',)
+    const conv0 = extractConvWithBatchNormParams(s0, s1, 'conv0')
     const conv1 = extractConvWithBatchNormParams(s1, s2, 'conv1')
     const conv2 = extractConvWithBatchNormParams(s2, s3, 'conv2')
     const conv3 = extractConvWithBatchNormParams(s3, s4, 'conv3')
@@ -95,7 +90,6 @@ export function extractParams(
   if (getRemainingWeights().length !== 0) {
     throw new Error(`weights remaing after extract: ${getRemainingWeights().length}`)
   }
-
 
   return { params, paramMappings }
 }

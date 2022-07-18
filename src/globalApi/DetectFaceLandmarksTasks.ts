@@ -1,25 +1,25 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { FaceLandmarks68 } from '../classes/FaceLandmarks68';
-import { extractFaces, extractFaceTensors, TNetInput } from '../dom';
-import { FaceLandmark68Net } from '../faceLandmarkNet/FaceLandmark68Net';
-import { FaceLandmark68TinyNet } from '../faceLandmarkNet/FaceLandmark68TinyNet';
-import { WithFaceDetection } from '../factories/WithFaceDetection';
-import { extendWithFaceLandmarks, WithFaceLandmarks } from '../factories/WithFaceLandmarks';
-import { ComposableTask } from './ComposableTask';
-import { ComputeAllFaceDescriptorsTask, ComputeSingleFaceDescriptorTask } from './ComputeFaceDescriptorsTasks';
-import { nets } from './nets';
+import { FaceLandmarks68 } from '../classes/FaceLandmarks68'
+import { extractFaces, extractFaceTensors, TNetInput } from '../dom'
+import { FaceLandmark68Net } from '../faceLandmarkNet/FaceLandmark68Net'
+import { FaceLandmark68TinyNet } from '../faceLandmarkNet/FaceLandmark68TinyNet'
+import { WithFaceDetection } from '../factories/WithFaceDetection'
+import { extendWithFaceLandmarks, WithFaceLandmarks } from '../factories/WithFaceLandmarks'
+import { ComposableTask } from './ComposableTask'
+import { ComputeAllFaceDescriptorsTask, ComputeSingleFaceDescriptorTask } from './ComputeFaceDescriptorsTasks'
+import { nets } from './nets'
 import {
   PredictAllAgeAndGenderWithFaceAlignmentTask,
-  PredictSingleAgeAndGenderWithFaceAlignmentTask,
-} from './PredictAgeAndGenderTask';
+  PredictSingleAgeAndGenderWithFaceAlignmentTask
+} from './PredictAgeAndGenderTask'
 import {
   PredictAllFaceExpressionsWithFaceAlignmentTask,
-  PredictSingleFaceExpressionsWithFaceAlignmentTask,
-} from './PredictFaceExpressionsTask';
+  PredictSingleFaceExpressionsWithFaceAlignmentTask
+} from './PredictFaceExpressionsTask'
 
 export class DetectFaceLandmarksTaskBase<TReturn, TParentReturn> extends ComposableTask<TReturn> {
-  constructor(
+  constructor (
     protected parentTask: ComposableTask<TParentReturn> | Promise<TParentReturn>,
     protected input: TNetInput,
     protected useTinyLandmarkNet: boolean
@@ -27,7 +27,7 @@ export class DetectFaceLandmarksTaskBase<TReturn, TParentReturn> extends Composa
     super()
   }
 
-  protected get landmarkNet(): FaceLandmark68Net | FaceLandmark68TinyNet {
+  protected get landmarkNet (): FaceLandmark68Net | FaceLandmark68TinyNet {
     return this.useTinyLandmarkNet
       ? nets.faceLandmark68TinyNet
       : nets.faceLandmark68Net
@@ -37,9 +37,7 @@ export class DetectFaceLandmarksTaskBase<TReturn, TParentReturn> extends Composa
 export class DetectAllFaceLandmarksTask<
   TSource extends WithFaceDetection<{}>
 > extends DetectFaceLandmarksTaskBase<WithFaceLandmarks<TSource>[], TSource[]> {
-
-  public async run(): Promise<WithFaceLandmarks<TSource>[]> {
-
+  public async run (): Promise<WithFaceLandmarks<TSource>[]> {
     const parentResults = await this.parentTask
     const detections = parentResults.map(res => res.detection)
 
@@ -58,25 +56,23 @@ export class DetectAllFaceLandmarksTask<
     )
   }
 
-  withFaceExpressions() {
+  withFaceExpressions () {
     return new PredictAllFaceExpressionsWithFaceAlignmentTask(this, this.input)
   }
 
-  withAgeAndGender() {
+  withAgeAndGender () {
     return new PredictAllAgeAndGenderWithFaceAlignmentTask(this, this.input)
   }
 
-  withFaceDescriptors() {
+  withFaceDescriptors () {
     return new ComputeAllFaceDescriptorsTask(this, this.input)
   }
 }
 
 export class DetectSingleFaceLandmarksTask<
   TSource extends WithFaceDetection<{}>
->  extends DetectFaceLandmarksTaskBase<WithFaceLandmarks<TSource> | undefined, TSource | undefined> {
-
-  public async run(): Promise<WithFaceLandmarks<TSource> | undefined> {
-
+> extends DetectFaceLandmarksTaskBase<WithFaceLandmarks<TSource> | undefined, TSource | undefined> {
+  public async run (): Promise<WithFaceLandmarks<TSource> | undefined> {
     const parentResult = await this.parentTask
     if (!parentResult) {
       return
@@ -94,15 +90,15 @@ export class DetectSingleFaceLandmarksTask<
     return extendWithFaceLandmarks<TSource>(parentResult, landmarks)
   }
 
-  withFaceExpressions() {
+  withFaceExpressions () {
     return new PredictSingleFaceExpressionsWithFaceAlignmentTask(this, this.input)
   }
 
-  withAgeAndGender() {
+  withAgeAndGender () {
     return new PredictSingleAgeAndGenderWithFaceAlignmentTask(this, this.input)
   }
 
-  withFaceDescriptor() {
+  withFaceDescriptor () {
     return new ComputeSingleFaceDescriptorTask(this, this.input)
   }
 }

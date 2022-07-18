@@ -1,12 +1,12 @@
-import { Box, IBoundingBox, IRect } from '../classes';
-import { FaceDetection } from '../classes/FaceDetection';
-import { isWithFaceDetection, WithFaceDetection } from '../factories/WithFaceDetection';
-import { round } from '../utils';
-import { DrawBox } from './DrawBox';
+import { Box, IBoundingBox, IRect } from '../classes'
+import { FaceDetection } from '../classes/FaceDetection'
+import { isWithFaceDetection, WithFaceDetection } from '../factories/WithFaceDetection'
+import { round } from '../utils'
+import { DrawBox } from './DrawBox'
 
 export type TDrawDetectionsInput = IRect | IBoundingBox | FaceDetection | WithFaceDetection<{}>
 
-export function drawDetections(
+export function drawDetections (
   canvasArg: string | HTMLCanvasElement,
   detections: TDrawDetectionsInput | Array<TDrawDetectionsInput>
 ) {

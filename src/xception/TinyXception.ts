@@ -1,28 +1,28 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { ConvParams, depthwiseSeparableConv } from '../common';
-import { NetInput, TNetInput, toNetInput } from '../dom';
-import { NeuralNetwork } from '../NeuralNetwork';
-import { normalize } from '../ops';
-import { range } from '../utils';
-import { extractParams } from './extractParams';
-import { extractParamsFromWeigthMap } from './extractParamsFromWeigthMap';
-import { MainBlockParams, ReductionBlockParams, TinyXceptionParams } from './types';
+import { ConvParams, depthwiseSeparableConv } from '../common'
+import { NetInput, TNetInput, toNetInput } from '../dom'
+import { NeuralNetwork } from '../NeuralNetwork'
+import { normalize } from '../ops'
+import { range } from '../utils'
+import { extractParams } from './extractParams'
+import { extractParamsFromWeigthMap } from './extractParamsFromWeigthMap'
+import { MainBlockParams, ReductionBlockParams, TinyXceptionParams } from './types'
 
-function conv(x: tf.Tensor4D, params: ConvParams, stride: [number, number]): tf.Tensor4D {
+function conv (x: tf.Tensor4D, params: ConvParams, stride: [number, number]): tf.Tensor4D {
   return tf.add(tf.conv2d(x, params.filters, stride, 'same'), params.bias)
 }
 
-function reductionBlock(x: tf.Tensor4D, params: ReductionBlockParams, isActivateInput: boolean = true): tf.Tensor4D {
+function reductionBlock (x: tf.Tensor4D, params: ReductionBlockParams, isActivateInput: boolean = true): tf.Tensor4D {
   let out = isActivateInput ? tf.relu(x) : x
   out = depthwiseSeparableConv(out, params.separable_conv0, [1, 1])
-  out = depthwiseSeparableConv(tf.relu(out),  params.separable_conv1, [1, 1])
+  out = depthwiseSeparableConv(tf.relu(out), params.separable_conv1, [1, 1])
   out = tf.maxPool(out, [3, 3], [2, 2], 'same')
-  out = tf.add(out, conv(x,  params.expansion_conv, [2, 2]))
+  out = tf.add(out, conv(x, params.expansion_conv, [2, 2]))
   return out
 }
 
-function mainBlock(x: tf.Tensor4D, params: MainBlockParams): tf.Tensor4D {
+function mainBlock (x: tf.Tensor4D, params: MainBlockParams): tf.Tensor4D {
   let out = depthwiseSeparableConv(tf.relu(x), params.separable_conv0, [1, 1])
   out = depthwiseSeparableConv(tf.relu(out), params.separable_conv1, [1, 1])
   out = depthwiseSeparableConv(tf.relu(out), params.separable_conv2, [1, 1])
@@ -31,16 +31,14 @@ function mainBlock(x: tf.Tensor4D, params: MainBlockParams): tf.Tensor4D {
 }
 
 export class TinyXception extends NeuralNetwork<TinyXceptionParams> {
-
   private _numMainBlocks: number
 
-  constructor(numMainBlocks: number) {
+  constructor (numMainBlocks: number) {
     super('TinyXception')
     this._numMainBlocks = numMainBlocks
   }
 
-  public forwardInput(input: NetInput): tf.Tensor4D {
-
+  public forwardInput (input: NetInput): tf.Tensor4D {
     const { params } = this
 
     if (!params) {
@@ -66,19 +64,19 @@ export class TinyXception extends NeuralNetwork<TinyXceptionParams> {
     })
   }
 
-  public async forward(input: TNetInput): Promise<tf.Tensor4D> {
+  public async forward (input: TNetInput): Promise<tf.Tensor4D> {
     return this.forwardInput(await toNetInput(input))
   }
 
-  protected getDefaultModelName(): string {
+  protected getDefaultModelName (): string {
     return 'tiny_xception_model'
   }
 
-  protected extractParamsFromWeigthMap(weightMap: tf.NamedTensorMap) {
+  protected extractParamsFromWeigthMap (weightMap: tf.NamedTensorMap) {
     return extractParamsFromWeigthMap(weightMap, this._numMainBlocks)
   }
 
-  protected extractParams(weights: Float32Array) {
+  protected extractParams (weights: Float32Array) {
     return extractParams(weights, this._numMainBlocks)
   }
 }

@@ -1,8 +1,7 @@
-import { isTensor } from '../utils';
-import { ParamMapping } from './types';
+import { isTensor } from '../utils'
+import { ParamMapping } from './types'
 
-export function extractWeightEntryFactory(weightMap: any, paramMappings: ParamMapping[]) {
-
+export function extractWeightEntryFactory (weightMap: any, paramMappings: ParamMapping[]) {
   return function<T> (originalPath: string, paramRank: number, mappedPath?: string): T {
     const tensor = weightMap[originalPath]
 
@@ -16,5 +15,4 @@ export function extractWeightEntryFactory(weightMap: any, paramMappings: ParamMa
 
     return tensor
   }
-
 }

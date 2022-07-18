@@ -1,21 +1,19 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { NetInput, TNetInput, toNetInput } from '../dom';
-import { NeuralNetwork } from '../NeuralNetwork';
-import { normalize } from '../ops';
-import { denseBlock4 } from './denseBlock';
-import { extractParams } from './extractParams';
-import { extractParamsFromWeigthMap } from './extractParamsFromWeigthMap';
-import { FaceFeatureExtractorParams, IFaceFeatureExtractor } from './types';
+import { NetInput, TNetInput, toNetInput } from '../dom'
+import { NeuralNetwork } from '../NeuralNetwork'
+import { normalize } from '../ops'
+import { denseBlock4 } from './denseBlock'
+import { extractParams } from './extractParams'
+import { extractParamsFromWeigthMap } from './extractParamsFromWeigthMap'
+import { FaceFeatureExtractorParams, IFaceFeatureExtractor } from './types'
 
 export class FaceFeatureExtractor extends NeuralNetwork<FaceFeatureExtractorParams> implements IFaceFeatureExtractor<FaceFeatureExtractorParams> {
-
-  constructor() {
+  constructor () {
     super('FaceFeatureExtractor')
   }
 
-  public forwardInput(input: NetInput): tf.Tensor4D {
-
+  public forwardInput (input: NetInput): tf.Tensor4D {
     const { params } = this
 
     if (!params) {
@@ -37,19 +35,19 @@ export class FaceFeatureExtractor extends NeuralNetwork<FaceFeatureExtractorPara
     })
   }
 
-  public async forward(input: TNetInput): Promise<tf.Tensor4D> {
+  public async forward (input: TNetInput): Promise<tf.Tensor4D> {
     return this.forwardInput(await toNetInput(input))
   }
 
-  protected getDefaultModelName(): string {
+  protected getDefaultModelName (): string {
     return 'face_feature_extractor_model'
   }
 
-  protected extractParamsFromWeigthMap(weightMap: tf.NamedTensorMap) {
+  protected extractParamsFromWeigthMap (weightMap: tf.NamedTensorMap) {
     return extractParamsFromWeigthMap(weightMap)
   }
 
-  protected extractParams(weights: Float32Array) {
+  protected extractParams (weights: Float32Array) {
     return extractParams(weights)
   }
 }

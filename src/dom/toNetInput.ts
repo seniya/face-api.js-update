@@ -1,9 +1,9 @@
-import { isTensor3D, isTensor4D } from '../utils';
-import { awaitMediaLoaded } from './awaitMediaLoaded';
-import { isMediaElement } from './isMediaElement';
-import { NetInput } from './NetInput';
-import { resolveInput } from './resolveInput';
-import { TNetInput } from './types';
+import { isTensor3D, isTensor4D } from '../utils'
+import { awaitMediaLoaded } from './awaitMediaLoaded'
+import { isMediaElement } from './isMediaElement'
+import { NetInput } from './NetInput'
+import { resolveInput } from './resolveInput'
+import { TNetInput } from './types'
 
 /**
  * Validates the input to make sure, they are valid net inputs and awaits all media elements
@@ -12,14 +12,14 @@ import { TNetInput } from './types';
  * @param input The input, which can be a media element or an array of different media elements.
  * @returns A NetInput instance, which can be passed into one of the neural networks.
  */
-export async function toNetInput(inputs: TNetInput): Promise<NetInput> {
+export async function toNetInput (inputs: TNetInput): Promise<NetInput> {
   if (inputs instanceof NetInput) {
     return inputs
   }
 
-  let inputArgArray = Array.isArray(inputs)
-      ? inputs
-      : [inputs]
+  const inputArgArray = Array.isArray(inputs)
+    ? inputs
+    : [inputs]
 
   if (!inputArgArray.length) {
     throw new Error('toNetInput - empty array passed as input')
@@ -31,7 +31,6 @@ export async function toNetInput(inputs: TNetInput): Promise<NetInput> {
 
   inputArray.forEach((input, i) => {
     if (!isMediaElement(input) && !isTensor3D(input) && !isTensor4D(input)) {
-
       if (typeof inputArgArray[i] === 'string') {
         throw new Error(`toNetInput -${getIdxHint(i)} string passed, but could not resolve HTMLElement for element id ${inputArgArray[i]}`)
       }

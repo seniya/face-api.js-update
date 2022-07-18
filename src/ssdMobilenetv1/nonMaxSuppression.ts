@@ -1,13 +1,12 @@
 import * as tf from '@tensorflow/tfjs-core'
 
-export function nonMaxSuppression(
+export function nonMaxSuppression (
   boxes: tf.Tensor2D,
   scores: number[],
   maxOutputSize: number,
   iouThreshold: number,
   scoreThreshold: number
 ): number[] {
-
   const numBoxes = boxes.shape[0]
   const outputSize = Math.min(
     maxOutputSize,
@@ -48,7 +47,7 @@ export function nonMaxSuppression(
   return selected
 }
 
-function IOU(boxes: tf.Tensor2D, i: number, j: number) {
+function IOU (boxes: tf.Tensor2D, i: number, j: number) {
   const boxesData = boxes.arraySync()
   const yminI = Math.min(boxesData[i][0], boxesData[i][2])
   const xminI = Math.min(boxesData[i][1], boxesData[i][3])

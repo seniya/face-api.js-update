@@ -1,20 +1,19 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { Box } from '../classes';
-import { nonMaxSuppression } from '../ops';
-import { extractImagePatches } from './extractImagePatches';
-import { MtcnnBox } from './MtcnnBox';
-import { RNet } from './RNet';
-import { RNetParams } from './types';
+import { Box } from '../classes'
+import { nonMaxSuppression } from '../ops'
+import { extractImagePatches } from './extractImagePatches'
+import { MtcnnBox } from './MtcnnBox'
+import { RNet } from './RNet'
+import { RNetParams } from './types'
 
-export async function stage2(
+export async function stage2 (
   img: HTMLCanvasElement,
   inputBoxes: Box[],
   scoreThreshold: number,
   params: RNetParams,
   stats: any
 ) {
-
   let ts = Date.now()
   const rnetInputs = await extractImagePatches(img, inputBoxes, { width: 24, height: 24 })
   stats.stage2_extractImagePatches = Date.now() - ts
@@ -55,15 +54,15 @@ export async function stage2(
     )
     stats.stage2_nms = Date.now() - ts
 
-    const regions = indicesNms.map(idx =>{
-        const regionsData = rnetOuts[indices[idx]].regions.arraySync()
-        return new MtcnnBox(
-          regionsData[0][0],
-          regionsData[0][1],
-          regionsData[0][2],
-          regionsData[0][3]
-        )
-      }
+    const regions = indicesNms.map(idx => {
+      const regionsData = rnetOuts[indices[idx]].regions.arraySync()
+      return new MtcnnBox(
+        regionsData[0][0],
+        regionsData[0][1],
+        regionsData[0][2],
+        regionsData[0][3]
+      )
+    }
     )
 
     finalScores = indicesNms.map(idx => filteredScores[idx])

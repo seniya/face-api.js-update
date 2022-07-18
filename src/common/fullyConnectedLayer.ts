@@ -1,8 +1,8 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { FCParams } from './types';
+import { FCParams } from './types'
 
-export function fullyConnectedLayer(
+export function fullyConnectedLayer (
   x: tf.Tensor2D,
   params: FCParams
 ): tf.Tensor2D {

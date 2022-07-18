@@ -1,27 +1,25 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
 import {
   extractConvParamsFactory,
   extractFCParamsFactory,
   extractWeightsFactory,
   ExtractWeightsFunction,
-  ParamMapping,
-} from '../common';
-import { NetParams, ONetParams, PNetParams, RNetParams, SharedParams } from './types';
+  ParamMapping
+} from '../common'
+import { NetParams, ONetParams, PNetParams, RNetParams, SharedParams } from './types'
 
-function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings: ParamMapping[]) {
-
+function extractorsFactory (extractWeights: ExtractWeightsFunction, paramMappings: ParamMapping[]) {
   const extractConvParams = extractConvParamsFactory(extractWeights, paramMappings)
   const extractFCParams = extractFCParamsFactory(extractWeights, paramMappings)
 
-  function extractPReluParams(size: number, paramPath: string): tf.Tensor1D {
+  function extractPReluParams (size: number, paramPath: string): tf.Tensor1D {
     const alpha = tf.tensor1d(extractWeights(size))
     paramMappings.push({ paramPath })
     return alpha
   }
 
-  function extractSharedParams(numFilters: number[], mappedPrefix: string, isRnet: boolean = false): SharedParams {
-
+  function extractSharedParams (numFilters: number[], mappedPrefix: string, isRnet: boolean = false): SharedParams {
     const conv1 = extractConvParams(numFilters[0], numFilters[1], 3, `${mappedPrefix}/conv1`)
     const prelu1_alpha = extractPReluParams(numFilters[1], `${mappedPrefix}/prelu1_alpha`)
     const conv2 = extractConvParams(numFilters[1], numFilters[2], 3, `${mappedPrefix}/conv2`)
@@ -32,8 +30,7 @@ function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings
     return { conv1, prelu1_alpha, conv2, prelu2_alpha, conv3, prelu3_alpha }
   }
 
-  function extractPNetParams(): PNetParams {
-
+  function extractPNetParams (): PNetParams {
     const sharedParams = extractSharedParams([3, 10, 16, 32], 'pnet')
     const conv4_1 = extractConvParams(32, 2, 1, 'pnet/conv4_1')
     const conv4_2 = extractConvParams(32, 4, 1, 'pnet/conv4_2')
@@ -41,8 +38,7 @@ function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings
     return { ...sharedParams, conv4_1, conv4_2 }
   }
 
-  function extractRNetParams(): RNetParams {
-
+  function extractRNetParams (): RNetParams {
     const sharedParams = extractSharedParams([3, 28, 48, 64], 'rnet', true)
     const fc1 = extractFCParams(576, 128, 'rnet/fc1')
     const prelu4_alpha = extractPReluParams(128, 'rnet/prelu4_alpha')
@@ -52,8 +48,7 @@ function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings
     return { ...sharedParams, fc1, prelu4_alpha, fc2_1, fc2_2 }
   }
 
-  function extractONetParams(): ONetParams {
-
+  function extractONetParams (): ONetParams {
     const sharedParams = extractSharedParams([3, 32, 64, 64], 'onet')
     const conv4 = extractConvParams(64, 128, 2, 'onet/conv4')
     const prelu4_alpha = extractPReluParams(128, 'onet/prelu4_alpha')
@@ -71,11 +66,9 @@ function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings
     extractRNetParams,
     extractONetParams
   }
-
 }
 
-export function extractParams(weights: Float32Array): { params: NetParams, paramMappings: ParamMapping[] } {
-
+export function extractParams (weights: Float32Array): { params: NetParams, paramMappings: ParamMapping[] } {
   const {
     extractWeights,
     getRemainingWeights

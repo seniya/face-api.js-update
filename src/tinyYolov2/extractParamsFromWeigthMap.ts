@@ -1,30 +1,29 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { ConvParams } from '../common';
-import { disposeUnusedWeightTensors } from '../common/disposeUnusedWeightTensors';
-import { loadSeparableConvParamsFactory } from '../common/extractSeparableConvParamsFactory';
-import { extractWeightEntryFactory } from '../common/extractWeightEntryFactory';
-import { ParamMapping } from '../common/types';
-import { TinyYolov2Config } from './config';
-import { BatchNorm, ConvWithBatchNorm, TinyYolov2NetParams } from './types';
+import { ConvParams } from '../common'
+import { disposeUnusedWeightTensors } from '../common/disposeUnusedWeightTensors'
+import { loadSeparableConvParamsFactory } from '../common/extractSeparableConvParamsFactory'
+import { extractWeightEntryFactory } from '../common/extractWeightEntryFactory'
+import { ParamMapping } from '../common/types'
+import { TinyYolov2Config } from './config'
+import { BatchNorm, ConvWithBatchNorm, TinyYolov2NetParams } from './types'
 
-function extractorsFactory(weightMap: any, paramMappings: ParamMapping[]) {
-
+function extractorsFactory (weightMap: any, paramMappings: ParamMapping[]) {
   const extractWeightEntry = extractWeightEntryFactory(weightMap, paramMappings)
 
-  function extractBatchNormParams(prefix: string): BatchNorm {
+  function extractBatchNormParams (prefix: string): BatchNorm {
     const sub = extractWeightEntry<tf.Tensor1D>(`${prefix}/sub`, 1)
     const truediv = extractWeightEntry<tf.Tensor1D>(`${prefix}/truediv`, 1)
     return { sub, truediv }
   }
 
-  function extractConvParams(prefix: string): ConvParams {
+  function extractConvParams (prefix: string): ConvParams {
     const filters = extractWeightEntry<tf.Tensor4D>(`${prefix}/filters`, 4)
     const bias = extractWeightEntry<tf.Tensor1D>(`${prefix}/bias`, 1)
     return { filters, bias }
   }
 
-  function extractConvWithBatchNormParams(prefix: string): ConvWithBatchNorm {
+  function extractConvWithBatchNormParams (prefix: string): ConvWithBatchNorm {
     const conv = extractConvParams(`${prefix}/conv`)
     const bn = extractBatchNormParams(`${prefix}/bn`)
     return { conv, bn }
@@ -37,14 +36,12 @@ function extractorsFactory(weightMap: any, paramMappings: ParamMapping[]) {
     extractConvWithBatchNormParams,
     extractSeparableConvParams
   }
-
 }
 
-export function extractParamsFromWeigthMap(
+export function extractParamsFromWeigthMap (
   weightMap: tf.NamedTensorMap,
   config: TinyYolov2Config
 ): { params: TinyYolov2NetParams, paramMappings: ParamMapping[] } {
-
   const paramMappings: ParamMapping[] = []
 
   const {

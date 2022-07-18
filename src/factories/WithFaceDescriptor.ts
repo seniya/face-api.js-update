@@ -8,8 +8,6 @@ export function extendWithFaceDescriptor<
   sourceObj: TSource,
   descriptor: Float32Array
 ): WithFaceDescriptor<TSource> {
-
   const extension = { descriptor }
   return Object.assign({}, sourceObj, extension)
 }
-

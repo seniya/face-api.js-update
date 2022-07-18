@@ -1,19 +1,19 @@
-import { FaceDetection } from '../classes/FaceDetection';
-import { TNetInput } from '../dom';
-import { extendWithFaceDetection, WithFaceDetection } from '../factories/WithFaceDetection';
-import { MtcnnOptions } from '../mtcnn/MtcnnOptions';
-import { SsdMobilenetv1Options } from '../ssdMobilenetv1/SsdMobilenetv1Options';
-import { TinyFaceDetectorOptions } from '../tinyFaceDetector/TinyFaceDetectorOptions';
-import { TinyYolov2Options } from '../tinyYolov2';
-import { ComposableTask } from './ComposableTask';
-import { DetectAllFaceLandmarksTask, DetectSingleFaceLandmarksTask } from './DetectFaceLandmarksTasks';
-import { nets } from './nets';
-import { PredictAllAgeAndGenderTask, PredictSingleAgeAndGenderTask } from './PredictAgeAndGenderTask';
-import { PredictAllFaceExpressionsTask, PredictSingleFaceExpressionsTask } from './PredictFaceExpressionsTask';
-import { FaceDetectionOptions } from './types';
+import { FaceDetection } from '../classes/FaceDetection'
+import { TNetInput } from '../dom'
+import { extendWithFaceDetection, WithFaceDetection } from '../factories/WithFaceDetection'
+import { MtcnnOptions } from '../mtcnn/MtcnnOptions'
+import { SsdMobilenetv1Options } from '../ssdMobilenetv1/SsdMobilenetv1Options'
+import { TinyFaceDetectorOptions } from '../tinyFaceDetector/TinyFaceDetectorOptions'
+import { TinyYolov2Options } from '../tinyYolov2'
+import { ComposableTask } from './ComposableTask'
+import { DetectAllFaceLandmarksTask, DetectSingleFaceLandmarksTask } from './DetectFaceLandmarksTasks'
+import { nets } from './nets'
+import { PredictAllAgeAndGenderTask, PredictSingleAgeAndGenderTask } from './PredictAgeAndGenderTask'
+import { PredictAllFaceExpressionsTask, PredictSingleFaceExpressionsTask } from './PredictFaceExpressionsTask'
+import { FaceDetectionOptions } from './types'
 
 export class DetectFacesTaskBase<TReturn> extends ComposableTask<TReturn> {
-  constructor(
+  constructor (
     protected input: TNetInput,
     protected options: FaceDetectionOptions = new SsdMobilenetv1Options()
   ) {
@@ -22,9 +22,7 @@ export class DetectFacesTaskBase<TReturn> extends ComposableTask<TReturn> {
 }
 
 export class DetectAllFacesTask extends DetectFacesTaskBase<FaceDetection[]> {
-
-  public async run(): Promise<FaceDetection[]> {
-
+  public async run (): Promise<FaceDetection[]> {
     const { input, options } = this
 
     if (options instanceof MtcnnOptions) {
@@ -35,14 +33,14 @@ export class DetectAllFacesTask extends DetectFacesTaskBase<FaceDetection[]> {
     const faceDetectionFunction = options instanceof TinyFaceDetectorOptions
       ? (input: TNetInput) => nets.tinyFaceDetector.locateFaces(input, options)
       : (
-        options instanceof SsdMobilenetv1Options
-          ? (input: TNetInput) => nets.ssdMobilenetv1.locateFaces(input, options)
-          : (
-            options instanceof TinyYolov2Options
-              ? (input: TNetInput) => nets.tinyYolov2.locateFaces(input, options)
-              : null
-          )
-      )
+          options instanceof SsdMobilenetv1Options
+            ? (input: TNetInput) => nets.ssdMobilenetv1.locateFaces(input, options)
+            : (
+                options instanceof TinyYolov2Options
+                  ? (input: TNetInput) => nets.tinyYolov2.locateFaces(input, options)
+                  : null
+              )
+        )
 
     if (!faceDetectionFunction) {
       throw new Error('detectFaces - expected options to be instance of TinyFaceDetectorOptions | SsdMobilenetv1Options | MtcnnOptions | TinyYolov2Options')
@@ -51,14 +49,14 @@ export class DetectAllFacesTask extends DetectFacesTaskBase<FaceDetection[]> {
     return faceDetectionFunction(input)
   }
 
-  private runAndExtendWithFaceDetections(): Promise<WithFaceDetection<{}>[]> {
+  private runAndExtendWithFaceDetections (): Promise<WithFaceDetection<{}>[]> {
     return new Promise<WithFaceDetection<{}>[]>(async res => {
       const detections = await this.run()
       return res(detections.map(detection => extendWithFaceDetection({}, detection)))
     })
   }
 
-  withFaceLandmarks(useTinyLandmarkNet: boolean = false) {
+  withFaceLandmarks (useTinyLandmarkNet: boolean = false) {
     return new DetectAllFaceLandmarksTask(
       this.runAndExtendWithFaceDetections(),
       this.input,
@@ -66,14 +64,14 @@ export class DetectAllFacesTask extends DetectFacesTaskBase<FaceDetection[]> {
     )
   }
 
-  withFaceExpressions() {
-    return new PredictAllFaceExpressionsTask (
+  withFaceExpressions () {
+    return new PredictAllFaceExpressionsTask(
       this.runAndExtendWithFaceDetections(),
       this.input
     )
   }
 
-  withAgeAndGender() {
+  withAgeAndGender () {
     return new PredictAllAgeAndGenderTask(
       this.runAndExtendWithFaceDetections(),
       this.input
@@ -82,26 +80,25 @@ export class DetectAllFacesTask extends DetectFacesTaskBase<FaceDetection[]> {
 }
 
 export class DetectSingleFaceTask extends DetectFacesTaskBase<FaceDetection | undefined> {
-
-  public async run(): Promise<FaceDetection | undefined> {
-    const faceDetections = await new DetectAllFacesTask(this.input, this.options);
-    let faceDetectionWithHighestScore = faceDetections[0];
+  public async run (): Promise<FaceDetection | undefined> {
+    const faceDetections = await new DetectAllFacesTask(this.input, this.options)
+    let faceDetectionWithHighestScore = faceDetections[0]
     faceDetections.forEach(faceDetection => {
       if (faceDetection.score > faceDetectionWithHighestScore.score) {
-        faceDetectionWithHighestScore = faceDetection;
+        faceDetectionWithHighestScore = faceDetection
       }
-    });
-    return faceDetectionWithHighestScore;
+    })
+    return faceDetectionWithHighestScore
   }
 
-  private runAndExtendWithFaceDetection(): Promise<WithFaceDetection<{}>> {
+  private runAndExtendWithFaceDetection (): Promise<WithFaceDetection<{}>> {
     return new Promise<WithFaceDetection<{}>>(async res => {
       const detection = await this.run()
       return res(detection ? extendWithFaceDetection<{}>({}, detection) : undefined)
     })
   }
 
-  withFaceLandmarks(useTinyLandmarkNet: boolean = false) {
+  withFaceLandmarks (useTinyLandmarkNet: boolean = false) {
     return new DetectSingleFaceLandmarksTask(
       this.runAndExtendWithFaceDetection(),
       this.input,
@@ -109,14 +106,14 @@ export class DetectSingleFaceTask extends DetectFacesTaskBase<FaceDetection | un
     )
   }
 
-  withFaceExpressions() {
+  withFaceExpressions () {
     return new PredictSingleFaceExpressionsTask(
       this.runAndExtendWithFaceDetection(),
       this.input
     )
   }
 
-  withAgeAndGender() {
+  withAgeAndGender () {
     return new PredictSingleAgeAndGenderTask(
       this.runAndExtendWithFaceDetection(),
       this.input

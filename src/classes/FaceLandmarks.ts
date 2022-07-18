@@ -1,11 +1,11 @@
-import { minBbox } from '../ops';
-import { getCenterPoint } from '../utils';
-import { IBoundingBox } from './BoundingBox';
-import { Box } from './Box';
-import { Dimensions, IDimensions } from './Dimensions';
-import { FaceDetection } from './FaceDetection';
-import { Point } from './Point';
-import { IRect, Rect } from './Rect';
+import { minBbox } from '../ops'
+import { getCenterPoint } from '../utils'
+import { IBoundingBox } from './BoundingBox'
+import { Box } from './Box'
+import { Dimensions, IDimensions } from './Dimensions'
+import { FaceDetection } from './FaceDetection'
+import { Point } from './Point'
+import { IRect, Rect } from './Rect'
 
 // face alignment constants
 const relX = 0.5
@@ -22,7 +22,7 @@ export class FaceLandmarks implements IFaceLandmarks {
   protected _positions: Point[]
   protected _imgDims: Dimensions
 
-  constructor(
+  constructor (
     relativeFaceLandmarkPositions: Point[],
     imgDims: IDimensions,
     shift: Point = new Point(0, 0)
@@ -35,24 +35,24 @@ export class FaceLandmarks implements IFaceLandmarks {
     )
   }
 
-  public get shift(): Point { return new Point(this._shift.x, this._shift.y) }
-  public get imageWidth(): number { return this._imgDims.width }
-  public get imageHeight(): number { return this._imgDims.height }
-  public get positions(): Point[] { return this._positions }
-  public get relativePositions(): Point[] {
+  public get shift (): Point { return new Point(this._shift.x, this._shift.y) }
+  public get imageWidth (): number { return this._imgDims.width }
+  public get imageHeight (): number { return this._imgDims.height }
+  public get positions (): Point[] { return this._positions }
+  public get relativePositions (): Point[] {
     return this._positions.map(
       pt => pt.sub(this._shift).div(new Point(this.imageWidth, this.imageHeight))
     )
   }
 
-  public forSize<T extends FaceLandmarks>(width: number, height: number): T {
+  public forSize<T extends FaceLandmarks> (width: number, height: number): T {
     return new (this.constructor as any)(
       this.relativePositions,
       { width, height }
     )
   }
 
-  public shiftBy<T extends FaceLandmarks>(x: number, y: number): T {
+  public shiftBy<T extends FaceLandmarks> (x: number, y: number): T {
     return new (this.constructor as any)(
       this.relativePositions,
       this._imgDims,
@@ -60,7 +60,7 @@ export class FaceLandmarks implements IFaceLandmarks {
     )
   }
 
-  public shiftByPoint<T extends FaceLandmarks>(pt: Point): T {
+  public shiftByPoint<T extends FaceLandmarks> (pt: Point): T {
     return this.shiftBy(pt.x, pt.y)
   }
 
@@ -75,7 +75,7 @@ export class FaceLandmarks implements IFaceLandmarks {
    * it's current shift.
    * @returns The bounding box of the aligned face.
    */
-  public align(
+  public align (
     detection?: FaceDetection | IRect | IBoundingBox | null,
     options: { useDlibAlignment?: boolean, minBoxPadding?: number } = { }
   ): Box {
@@ -96,8 +96,7 @@ export class FaceLandmarks implements IFaceLandmarks {
     return this.alignMinBbox(minBoxPadding)
   }
 
-  private alignDlib(): Box {
-
+  private alignDlib (): Box {
     const centers = this.getRefPointsForAlignment()
 
     const [leftEyeCenter, rightEyeCenter, mouthCenter] = centers
@@ -114,12 +113,12 @@ export class FaceLandmarks implements IFaceLandmarks {
     return new Rect(x, y, Math.min(size, this.imageWidth + x), Math.min(size, this.imageHeight + y))
   }
 
-  private alignMinBbox(padding: number): Box {
+  private alignMinBbox (padding: number): Box {
     const box = minBbox(this.positions)
     return box.pad(box.width * padding, box.height * padding)
   }
 
-  protected getRefPointsForAlignment(): Point[] {
+  protected getRefPointsForAlignment (): Point[] {
     throw new Error('getRefPointsForAlignment not implemented by base class')
   }
 }

@@ -1,23 +1,23 @@
-import { AgeGenderNet } from '../ageGenderNet/AgeGenderNet';
-import { AgeAndGenderPrediction } from '../ageGenderNet/types';
-import { FaceDetection } from '../classes/FaceDetection';
-import { FaceLandmarks5 } from '../classes/FaceLandmarks5';
-import { FaceLandmarks68 } from '../classes/FaceLandmarks68';
-import { TNetInput } from '../dom';
-import { FaceExpressionNet } from '../faceExpressionNet/FaceExpressionNet';
-import { FaceExpressions } from '../faceExpressionNet/FaceExpressions';
-import { FaceLandmark68Net } from '../faceLandmarkNet/FaceLandmark68Net';
-import { FaceLandmark68TinyNet } from '../faceLandmarkNet/FaceLandmark68TinyNet';
-import { FaceRecognitionNet } from '../faceRecognitionNet/FaceRecognitionNet';
-import { WithFaceDetection } from '../factories/WithFaceDetection';
-import { WithFaceLandmarks } from '../factories/WithFaceLandmarks';
-import { Mtcnn } from '../mtcnn/Mtcnn';
-import { MtcnnOptions } from '../mtcnn/MtcnnOptions';
-import { SsdMobilenetv1 } from '../ssdMobilenetv1/SsdMobilenetv1';
-import { SsdMobilenetv1Options } from '../ssdMobilenetv1/SsdMobilenetv1Options';
-import { TinyFaceDetector } from '../tinyFaceDetector/TinyFaceDetector';
-import { TinyFaceDetectorOptions } from '../tinyFaceDetector/TinyFaceDetectorOptions';
-import { ITinyYolov2Options, TinyYolov2 } from '../tinyYolov2';
+import { AgeGenderNet } from '../ageGenderNet/AgeGenderNet'
+import { AgeAndGenderPrediction } from '../ageGenderNet/types'
+import { FaceDetection } from '../classes/FaceDetection'
+import { FaceLandmarks5 } from '../classes/FaceLandmarks5'
+import { FaceLandmarks68 } from '../classes/FaceLandmarks68'
+import { TNetInput } from '../dom'
+import { FaceExpressionNet } from '../faceExpressionNet/FaceExpressionNet'
+import { FaceExpressions } from '../faceExpressionNet/FaceExpressions'
+import { FaceLandmark68Net } from '../faceLandmarkNet/FaceLandmark68Net'
+import { FaceLandmark68TinyNet } from '../faceLandmarkNet/FaceLandmark68TinyNet'
+import { FaceRecognitionNet } from '../faceRecognitionNet/FaceRecognitionNet'
+import { WithFaceDetection } from '../factories/WithFaceDetection'
+import { WithFaceLandmarks } from '../factories/WithFaceLandmarks'
+import { Mtcnn } from '../mtcnn/Mtcnn'
+import { MtcnnOptions } from '../mtcnn/MtcnnOptions'
+import { SsdMobilenetv1 } from '../ssdMobilenetv1/SsdMobilenetv1'
+import { SsdMobilenetv1Options } from '../ssdMobilenetv1/SsdMobilenetv1Options'
+import { TinyFaceDetector } from '../tinyFaceDetector/TinyFaceDetector'
+import { TinyFaceDetectorOptions } from '../tinyFaceDetector/TinyFaceDetectorOptions'
+import { ITinyYolov2Options, TinyYolov2 } from '../tinyYolov2'
 
 export const nets = {
   ssdMobilenetv1: new SsdMobilenetv1(),
@@ -91,7 +91,7 @@ export const detectFaceLandmarks = (input: TNetInput): Promise<FaceLandmarks68 |
  * also be an array of input images, which will be batch processed.
  * @returns 68 point face landmarks or array thereof in case of batch input.
  */
-export const detectFaceLandmarksTiny = (input: TNetInput): Promise<FaceLandmarks68 | FaceLandmarks68[]>  =>
+export const detectFaceLandmarksTiny = (input: TNetInput): Promise<FaceLandmarks68 | FaceLandmarks68[]> =>
   nets.faceLandmark68TinyNet.detectLandmarks(input)
 
 /**
@@ -104,9 +104,8 @@ export const detectFaceLandmarksTiny = (input: TNetInput): Promise<FaceLandmarks
  * also be an array of input images, which will be batch processed.
  * @returns Face descriptor with 128 entries or array thereof in case of batch input.
  */
-export const computeFaceDescriptor = (input: TNetInput): Promise<Float32Array | Float32Array[]>  =>
+export const computeFaceDescriptor = (input: TNetInput): Promise<Float32Array | Float32Array[]> =>
   nets.faceRecognitionNet.computeFaceDescriptor(input)
-
 
 /**
  * Recognizes the facial expressions from a face image.

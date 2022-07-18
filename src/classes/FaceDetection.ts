@@ -1,7 +1,7 @@
-import { Box } from './Box';
-import { IDimensions } from './Dimensions';
-import { ObjectDetection } from './ObjectDetection';
-import { Rect } from './Rect';
+import { Box } from './Box'
+import { IDimensions } from './Dimensions'
+import { ObjectDetection } from './ObjectDetection'
+import { Rect } from './Rect'
 
 export interface IFaceDetecion {
   score: number
@@ -9,7 +9,7 @@ export interface IFaceDetecion {
 }
 
 export class FaceDetection extends ObjectDetection implements IFaceDetecion {
-  constructor(
+  constructor (
     score: number,
     relativeBox: Rect,
     imageDims: IDimensions
@@ -17,7 +17,7 @@ export class FaceDetection extends ObjectDetection implements IFaceDetecion {
     super(score, score, '', relativeBox, imageDims)
   }
 
-  public forSize(width: number, height: number): FaceDetection {
+  public forSize (width: number, height: number): FaceDetection {
     const { score, relativeBox, imageDims } = super.forSize(width, height)
     return new FaceDetection(score, relativeBox, imageDims)
   }

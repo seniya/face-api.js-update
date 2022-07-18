@@ -1,19 +1,17 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { ConvParams, ExtractWeightsFunction, ParamMapping } from './types';
+import { ConvParams, ExtractWeightsFunction, ParamMapping } from './types'
 
-export function extractConvParamsFactory(
+export function extractConvParamsFactory (
   extractWeights: ExtractWeightsFunction,
   paramMappings: ParamMapping[]
 ) {
-
-  return function(
+  return function (
     channelsIn: number,
     channelsOut: number,
     filterSize: number,
     mappedPrefix: string
   ): ConvParams {
-
     const filters = tf.tensor4d(
       extractWeights(channelsIn * channelsOut * filterSize * filterSize),
       [filterSize, filterSize, channelsIn, channelsOut]
@@ -27,5 +25,4 @@ export function extractConvParamsFactory(
 
     return { filters, bias }
   }
-
 }

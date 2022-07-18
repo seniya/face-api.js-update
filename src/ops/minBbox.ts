@@ -1,6 +1,6 @@
-import { BoundingBox, IPoint } from '../classes';
+import { BoundingBox, IPoint } from '../classes'
 
-export function minBbox(pts: IPoint[]): BoundingBox {
+export function minBbox (pts: IPoint[]): BoundingBox {
   const xs = pts.map(pt => pt.x)
   const ys = pts.map(pt => pt.y)
   const minX = xs.reduce((min, x) => x < min ? x : min, Infinity)

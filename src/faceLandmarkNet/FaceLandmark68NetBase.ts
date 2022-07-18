@@ -1,19 +1,17 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { IDimensions, Point } from '../classes';
-import { FaceLandmarks68 } from '../classes/FaceLandmarks68';
-import { NetInput, TNetInput, toNetInput } from '../dom';
-import { FaceFeatureExtractorParams, TinyFaceFeatureExtractorParams } from '../faceFeatureExtractor/types';
-import { FaceProcessor } from '../faceProcessor/FaceProcessor';
-import { isEven } from '../utils';
+import { IDimensions, Point } from '../classes'
+import { FaceLandmarks68 } from '../classes/FaceLandmarks68'
+import { NetInput, TNetInput, toNetInput } from '../dom'
+import { FaceFeatureExtractorParams, TinyFaceFeatureExtractorParams } from '../faceFeatureExtractor/types'
+import { FaceProcessor } from '../faceProcessor/FaceProcessor'
+import { isEven } from '../utils'
 
 export abstract class FaceLandmark68NetBase<
   TExtractorParams extends FaceFeatureExtractorParams | TinyFaceFeatureExtractorParams
 >
   extends FaceProcessor<TExtractorParams> {
-
-  public postProcess(output: tf.Tensor2D, inputSize: number, originalDimensions: IDimensions[]): tf.Tensor2D {
-
+  public postProcess (output: tf.Tensor2D, inputSize: number, originalDimensions: IDimensions[]): tf.Tensor2D {
     const inputDimensions = originalDimensions.map(({ width, height }) => {
       const scale = inputSize / Math.max(height, width)
       return {
@@ -57,7 +55,7 @@ export abstract class FaceLandmark68NetBase<
     })
   }
 
-  public forwardInput(input: NetInput): tf.Tensor2D {
+  public forwardInput (input: NetInput): tf.Tensor2D {
     return tf.tidy(() => {
       const out = this.runNet(input)
       return this.postProcess(
@@ -68,11 +66,11 @@ export abstract class FaceLandmark68NetBase<
     })
   }
 
-  public async forward(input: TNetInput): Promise<tf.Tensor2D> {
+  public async forward (input: TNetInput): Promise<tf.Tensor2D> {
     return this.forwardInput(await toNetInput(input))
   }
 
-  public async detectLandmarks(input: TNetInput): Promise<FaceLandmarks68 | FaceLandmarks68[]> {
+  public async detectLandmarks (input: TNetInput): Promise<FaceLandmarks68 | FaceLandmarks68[]> {
     const netInput = await toNetInput(input)
     const landmarkTensors = tf.tidy(
       () => tf.unstack(this.forwardInput(netInput))
@@ -88,7 +86,7 @@ export abstract class FaceLandmark68NetBase<
           Array(68).fill(0).map((_, i) => new Point(xCoords[i], yCoords[i])),
           {
             height: netInput.getInputHeight(batchIdx),
-            width : netInput.getInputWidth(batchIdx),
+            width: netInput.getInputWidth(batchIdx)
           }
         )
       }
@@ -101,7 +99,7 @@ export abstract class FaceLandmark68NetBase<
       : landmarksForBatch[0]
   }
 
-  protected getClassifierChannelsOut(): number {
+  protected getClassifierChannelsOut (): number {
     return 136
   }
 }

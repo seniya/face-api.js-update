@@ -1,17 +1,16 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { BoundingBox, Point } from '../classes';
-import { nonMaxSuppression } from '../ops';
-import { CELL_SIZE, CELL_STRIDE } from './config';
-import { getSizesForScale } from './getSizesForScale';
-import { MtcnnBox } from './MtcnnBox';
-import { normalize } from './normalize';
-import { PNet } from './PNet';
-import { PNetParams } from './types';
+import { BoundingBox, Point } from '../classes'
+import { nonMaxSuppression } from '../ops'
+import { CELL_SIZE, CELL_STRIDE } from './config'
+import { getSizesForScale } from './getSizesForScale'
+import { MtcnnBox } from './MtcnnBox'
+import { normalize } from './normalize'
+import { PNet } from './PNet'
+import { PNetParams } from './types'
 
-function rescaleAndNormalize(x: tf.Tensor4D, scale: number): tf.Tensor4D {
+function rescaleAndNormalize (x: tf.Tensor4D, scale: number): tf.Tensor4D {
   return tf.tidy(() => {
-
     const { height, width } = getSizesForScale(scale, x.shape.slice(1))
     const resized = tf.image.resizeBilinear(x, [height, width])
     const normalized = normalize(resized)
@@ -20,16 +19,15 @@ function rescaleAndNormalize(x: tf.Tensor4D, scale: number): tf.Tensor4D {
   })
 }
 
-function extractBoundingBoxes(
+function extractBoundingBoxes (
   scoresTensor: tf.Tensor2D,
   regionsTensor: tf.Tensor3D,
   scale: number,
   scoreThreshold: number
 ) {
-
   // TODO: fix this!, maybe better to use tf.gather here
   const indices: Point[] = []
-  const scoresData = scoresTensor.arraySync();
+  const scoresData = scoresTensor.arraySync()
   for (let y = 0; y < scoresTensor.shape[0]; y++) {
     for (let x = 0; x < scoresTensor.shape[1]; x++) {
       if (scoresData[y][x] >= scoreThreshold) {
@@ -66,7 +64,7 @@ function extractBoundingBoxes(
   return boundingBoxes
 }
 
-export function stage1(
+export function stage1 (
   imgTensor: tf.Tensor4D,
   scales: number[],
   scoreThreshold: number,
@@ -79,7 +77,7 @@ export function stage1(
     const statsForScale: any = { scale }
     const resized = rescaleAndNormalize(imgTensor, scale)
 
-    let ts = Date.now()
+    const ts = Date.now()
     const { prob, regions } = PNet(resized, params)
     statsForScale.pnet = Date.now() - ts
 
@@ -110,7 +108,7 @@ export function stage1(
       return []
     }
 
-    let ts = Date.now()
+    const ts = Date.now()
     const indices = nonMaxSuppression(
       boundingBoxes.map(bbox => bbox.cell),
       boundingBoxes.map(bbox => bbox.score),
@@ -131,7 +129,7 @@ export function stage1(
   let finalScores: number[] = []
 
   if (allBoxes.length > 0) {
-    let ts = Date.now()
+    const ts = Date.now()
     const indices = nonMaxSuppression(
       allBoxes.map(bbox => bbox.cell),
       allBoxes.map(bbox => bbox.score),
@@ -150,12 +148,10 @@ export function stage1(
           cell.bottom + (region.bottom * cell.height)
         ).toSquare().round()
       )
-
   }
 
   return {
     boxes: finalBoxes,
     scores: finalScores
   }
-
 }

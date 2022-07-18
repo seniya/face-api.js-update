@@ -1,12 +1,11 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { ConvParams, extractWeightsFactory, ExtractWeightsFunction, ParamMapping } from '../common';
-import { isFloat } from '../utils';
-import { ConvLayerParams, NetParams, ResidualLayerParams, ScaleLayerParams } from './types';
+import { ConvParams, extractWeightsFactory, ExtractWeightsFunction, ParamMapping } from '../common'
+import { isFloat } from '../utils'
+import { ConvLayerParams, NetParams, ResidualLayerParams, ScaleLayerParams } from './types'
 
-function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings: ParamMapping[]) {
-
-  function extractFilterValues(numFilterValues: number, numFilters: number, filterSize: number): tf.Tensor4D {
+function extractorsFactory (extractWeights: ExtractWeightsFunction, paramMappings: ParamMapping[]) {
+  function extractFilterValues (numFilterValues: number, numFilters: number, filterSize: number): tf.Tensor4D {
     const weights = extractWeights(numFilterValues)
     const depth = weights.length / (numFilters * filterSize * filterSize)
 
@@ -22,13 +21,12 @@ function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings
     )
   }
 
-  function extractConvParams(
+  function extractConvParams (
     numFilterValues: number,
     numFilters: number,
     filterSize: number,
     mappedPrefix: string
   ): ConvParams {
-
     const filters = extractFilterValues(numFilterValues, numFilters, filterSize)
     const bias = tf.tensor1d(extractWeights(numFilters))
 
@@ -40,8 +38,7 @@ function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings
     return { filters, bias }
   }
 
-  function extractScaleLayerParams(numWeights: number, mappedPrefix: string): ScaleLayerParams {
-
+  function extractScaleLayerParams (numWeights: number, mappedPrefix: string): ScaleLayerParams {
     const weights = tf.tensor1d(extractWeights(numWeights))
     const biases = tf.tensor1d(extractWeights(numWeights))
 
@@ -56,27 +53,25 @@ function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings
     }
   }
 
-  function extractConvLayerParams(
+  function extractConvLayerParams (
     numFilterValues: number,
     numFilters: number,
     filterSize: number,
     mappedPrefix: string
   ): ConvLayerParams {
-
     const conv = extractConvParams(numFilterValues, numFilters, filterSize, `${mappedPrefix}/conv`)
     const scale = extractScaleLayerParams(numFilters, `${mappedPrefix}/scale`)
 
     return { conv, scale }
   }
 
-  function extractResidualLayerParams(
+  function extractResidualLayerParams (
     numFilterValues: number,
     numFilters: number,
     filterSize: number,
     mappedPrefix: string,
     isDown: boolean = false
   ): ResidualLayerParams {
-
     const conv1 = extractConvLayerParams((isDown ? 0.5 : 1) * numFilterValues, numFilters, filterSize, `${mappedPrefix}/conv1`)
     const conv2 = extractConvLayerParams(numFilterValues, numFilters, filterSize, `${mappedPrefix}/conv2`)
 
@@ -87,11 +82,9 @@ function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings
     extractConvLayerParams,
     extractResidualLayerParams
   }
-
 }
 
-export function extractParams(weights: Float32Array): { params: NetParams, paramMappings: ParamMapping[] } {
-
+export function extractParams (weights: Float32Array): { params: NetParams, paramMappings: ParamMapping[] } {
   const {
     extractWeights,
     getRemainingWeights
@@ -126,7 +119,7 @@ export function extractParams(weights: Float32Array): { params: NetParams, param
   const fc = tf.tidy(
     () => tf.transpose(tf.tensor2d(extractWeights(256 * 128), [128, 256]), [1, 0])
   )
-  paramMappings.push({ paramPath: `fc` })
+  paramMappings.push({ paramPath: 'fc' })
 
   if (getRemainingWeights().length !== 0) {
     throw new Error(`weights remaing after extract: ${getRemainingWeights().length}`)

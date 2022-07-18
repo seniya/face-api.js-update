@@ -1,23 +1,20 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { disposeUnusedWeightTensors, extractWeightEntryFactory, ParamMapping } from '../common';
-import { isTensor2D } from '../utils';
-import { ConvLayerParams, NetParams, ResidualLayerParams, ScaleLayerParams } from './types';
+import { disposeUnusedWeightTensors, extractWeightEntryFactory, ParamMapping } from '../common'
+import { isTensor2D } from '../utils'
+import { ConvLayerParams, NetParams, ResidualLayerParams, ScaleLayerParams } from './types'
 
-function extractorsFactory(weightMap: any, paramMappings: ParamMapping[]) {
-
+function extractorsFactory (weightMap: any, paramMappings: ParamMapping[]) {
   const extractWeightEntry = extractWeightEntryFactory(weightMap, paramMappings)
 
-  function extractScaleLayerParams(prefix: string): ScaleLayerParams {
-
+  function extractScaleLayerParams (prefix: string): ScaleLayerParams {
     const weights = extractWeightEntry<tf.Tensor1D>(`${prefix}/scale/weights`, 1)
     const biases = extractWeightEntry<tf.Tensor1D>(`${prefix}/scale/biases`, 1)
 
     return { weights, biases }
   }
 
-  function extractConvLayerParams(prefix: string): ConvLayerParams {
-
+  function extractConvLayerParams (prefix: string): ConvLayerParams {
     const filters = extractWeightEntry<tf.Tensor4D>(`${prefix}/conv/filters`, 4)
     const bias = extractWeightEntry<tf.Tensor1D>(`${prefix}/conv/bias`, 1)
     const scale = extractScaleLayerParams(prefix)
@@ -25,7 +22,7 @@ function extractorsFactory(weightMap: any, paramMappings: ParamMapping[]) {
     return { conv: { filters, bias }, scale }
   }
 
-  function extractResidualLayerParams(prefix: string): ResidualLayerParams {
+  function extractResidualLayerParams (prefix: string): ResidualLayerParams {
     return {
       conv1: extractConvLayerParams(`${prefix}/conv1`),
       conv2: extractConvLayerParams(`${prefix}/conv2`)
@@ -36,13 +33,11 @@ function extractorsFactory(weightMap: any, paramMappings: ParamMapping[]) {
     extractConvLayerParams,
     extractResidualLayerParams
   }
-
 }
 
-export function extractParamsFromWeigthMap(
+export function extractParamsFromWeigthMap (
   weightMap: tf.NamedTensorMap
 ): { params: NetParams, paramMappings: ParamMapping[] } {
-
   const paramMappings: ParamMapping[] = []
 
   const {
@@ -69,7 +64,7 @@ export function extractParamsFromWeigthMap(
   const conv256_2 = extractResidualLayerParams('conv256_2')
   const conv256_down_out = extractResidualLayerParams('conv256_down_out')
 
-  const fc = weightMap['fc']
+  const fc = weightMap.fc
   paramMappings.push({ originalPath: 'fc', paramPath: 'fc' })
 
   if (!isTensor2D(fc)) {

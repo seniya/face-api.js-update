@@ -1,10 +1,10 @@
-import { IPoint } from '../classes';
-import { FaceLandmarks } from '../classes/FaceLandmarks';
-import { FaceLandmarks68 } from '../classes/FaceLandmarks68';
-import { getContext2dOrThrow } from '../dom/getContext2dOrThrow';
-import { WithFaceDetection } from '../factories/WithFaceDetection';
-import { isWithFaceLandmarks, WithFaceLandmarks } from '../factories/WithFaceLandmarks';
-import { drawContour } from './drawContour';
+import { IPoint } from '../classes'
+import { FaceLandmarks } from '../classes/FaceLandmarks'
+import { FaceLandmarks68 } from '../classes/FaceLandmarks68'
+import { getContext2dOrThrow } from '../dom/getContext2dOrThrow'
+import { WithFaceDetection } from '../factories/WithFaceDetection'
+import { isWithFaceLandmarks, WithFaceLandmarks } from '../factories/WithFaceLandmarks'
+import { drawContour } from './drawContour'
 
 export interface IDrawFaceLandmarksOptions {
   drawLines?: boolean
@@ -23,7 +23,7 @@ export class DrawFaceLandmarksOptions {
   public lineColor: string
   public pointColor: string
 
-  constructor(options: IDrawFaceLandmarksOptions = {}) {
+  constructor (options: IDrawFaceLandmarksOptions = {}) {
     const { drawLines = true, drawPoints = true, lineWidth, lineColor, pointSize, pointColor } = options
     this.drawLines = drawLines
     this.drawPoints = drawPoints
@@ -38,7 +38,7 @@ export class DrawFaceLandmarks {
   public faceLandmarks: FaceLandmarks
   public options: DrawFaceLandmarksOptions
 
-  constructor(
+  constructor (
     faceLandmarks: FaceLandmarks,
     options: IDrawFaceLandmarksOptions = {}
   ) {
@@ -46,7 +46,7 @@ export class DrawFaceLandmarks {
     this.options = new DrawFaceLandmarksOptions(options)
   }
 
-  draw(canvasArg: string | HTMLCanvasElement | CanvasRenderingContext2D) {
+  draw (canvasArg: string | HTMLCanvasElement | CanvasRenderingContext2D) {
     const ctx = getContext2dOrThrow(canvasArg)
 
     const { drawLines, drawPoints, lineWidth, lineColor, pointSize, pointColor } = this.options
@@ -79,7 +79,7 @@ export class DrawFaceLandmarks {
 
 export type DrawFaceLandmarksInput = FaceLandmarks | WithFaceLandmarks<WithFaceDetection<{}>>
 
-export function drawFaceLandmarks(
+export function drawFaceLandmarks (
   canvasArg: string | HTMLCanvasElement,
   faceLandmarks: DrawFaceLandmarksInput | Array<DrawFaceLandmarksInput>
 ) {

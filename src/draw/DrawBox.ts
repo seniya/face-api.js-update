@@ -1,6 +1,6 @@
-import { Box, IBoundingBox, IRect } from '../classes';
-import { getContext2dOrThrow } from '../dom/getContext2dOrThrow';
-import { AnchorPosition, DrawTextField, DrawTextFieldOptions, IDrawTextFieldOptions } from './DrawTextField';
+import { Box, IBoundingBox, IRect } from '../classes'
+import { getContext2dOrThrow } from '../dom/getContext2dOrThrow'
+import { AnchorPosition, DrawTextField, DrawTextFieldOptions, IDrawTextFieldOptions } from './DrawTextField'
 
 export interface IDrawBoxOptions {
   boxColor?: string
@@ -15,7 +15,7 @@ export class DrawBoxOptions {
   public drawLabelOptions: DrawTextFieldOptions
   public label?: string
 
-  constructor(options: IDrawBoxOptions = {}) {
+  constructor (options: IDrawBoxOptions = {}) {
     const { boxColor, lineWidth, label, drawLabelOptions } = options
     this.boxColor = boxColor || 'rgba(0, 0, 255, 1)'
     this.lineWidth = lineWidth || 2
@@ -33,7 +33,7 @@ export class DrawBox {
   public box: Box
   public options: DrawBoxOptions
 
-  constructor(
+  constructor (
     box: IBoundingBox | IRect,
     options: IDrawBoxOptions = {}
   ) {
@@ -41,7 +41,7 @@ export class DrawBox {
     this.options = new DrawBoxOptions(options)
   }
 
-  draw(canvasArg: string | HTMLCanvasElement | CanvasRenderingContext2D) {
+  draw (canvasArg: string | HTMLCanvasElement | CanvasRenderingContext2D) {
     const ctx = getContext2dOrThrow(canvasArg)
 
     const { boxColor, lineWidth } = this.options

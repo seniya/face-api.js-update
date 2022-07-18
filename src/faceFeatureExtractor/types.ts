@@ -1,8 +1,8 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { NetInput, TNetInput } from '..';
-import { ConvParams, SeparableConvParams } from '../common';
-import { NeuralNetwork } from '../NeuralNetwork';
+import { NetInput, TNetInput } from '..'
+import { ConvParams, SeparableConvParams } from '../common'
+import { NeuralNetwork } from '../NeuralNetwork'
 
 export type ConvWithBatchNormParams = BatchNormParams & {
   filter: tf.Tensor4D

@@ -1,9 +1,8 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { OutputLayerParams } from './types';
+import { OutputLayerParams } from './types'
 
-
-function getCenterCoordinatesAndSizesLayer(x: tf.Tensor2D) {
+function getCenterCoordinatesAndSizesLayer (x: tf.Tensor2D) {
   const vec = tf.unstack(tf.transpose(x, [1, 0]))
 
   const sizes = [
@@ -22,7 +21,7 @@ function getCenterCoordinatesAndSizesLayer(x: tf.Tensor2D) {
   }
 }
 
-function decodeBoxesLayer(x0: tf.Tensor2D, x1: tf.Tensor2D) {
+function decodeBoxesLayer (x0: tf.Tensor2D, x1: tf.Tensor2D) {
   const {
     sizes,
     centers
@@ -47,13 +46,12 @@ function decodeBoxesLayer(x0: tf.Tensor2D, x1: tf.Tensor2D) {
   )
 }
 
-export function outputLayer(
+export function outputLayer (
   boxPredictions: tf.Tensor4D,
   classPredictions: tf.Tensor4D,
   params: OutputLayerParams
 ) {
   return tf.tidy(() => {
-
     const batchSize = boxPredictions.shape[0]
 
     let boxes = decodeBoxesLayer(
@@ -80,6 +78,5 @@ export function outputLayer(
       boxes: boxesByBatch,
       scores: scoresByBatch
     }
-
   })
 }

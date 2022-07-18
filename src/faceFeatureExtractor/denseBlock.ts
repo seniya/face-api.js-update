@@ -1,10 +1,10 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { ConvParams, SeparableConvParams } from '../common';
-import { depthwiseSeparableConv } from '../common/depthwiseSeparableConv';
-import { DenseBlock3Params, DenseBlock4Params } from './types';
+import { ConvParams, SeparableConvParams } from '../common'
+import { depthwiseSeparableConv } from '../common/depthwiseSeparableConv'
+import { DenseBlock3Params, DenseBlock4Params } from './types'
 
-export function denseBlock3(
+export function denseBlock3 (
   x: tf.Tensor4D,
   denseBlockParams: DenseBlock3Params,
   isFirstLayer: boolean = false
@@ -27,7 +27,7 @@ export function denseBlock3(
   })
 }
 
-export function denseBlock4(
+export function denseBlock4 (
   x: tf.Tensor4D,
   denseBlockParams: DenseBlock4Params,
   isFirstLayer: boolean = false,

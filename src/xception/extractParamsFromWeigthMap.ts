@@ -1,24 +1,22 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
 import {
   disposeUnusedWeightTensors,
   extractWeightEntryFactory,
   loadSeparableConvParamsFactory,
-  ParamMapping,
-} from '../common';
-import { loadConvParamsFactory } from '../common/loadConvParamsFactory';
-import { range } from '../utils';
-import { MainBlockParams, ReductionBlockParams, TinyXceptionParams } from './types';
+  ParamMapping
+} from '../common'
+import { loadConvParamsFactory } from '../common/loadConvParamsFactory'
+import { range } from '../utils'
+import { MainBlockParams, ReductionBlockParams, TinyXceptionParams } from './types'
 
-function loadParamsFactory(weightMap: any, paramMappings: ParamMapping[]) {
-
+function loadParamsFactory (weightMap: any, paramMappings: ParamMapping[]) {
   const extractWeightEntry = extractWeightEntryFactory(weightMap, paramMappings)
 
   const extractConvParams = loadConvParamsFactory(extractWeightEntry)
   const extractSeparableConvParams = loadSeparableConvParamsFactory(extractWeightEntry)
 
-  function extractReductionBlockParams(mappedPrefix: string): ReductionBlockParams {
-
+  function extractReductionBlockParams (mappedPrefix: string): ReductionBlockParams {
     const separable_conv0 = extractSeparableConvParams(`${mappedPrefix}/separable_conv0`)
     const separable_conv1 = extractSeparableConvParams(`${mappedPrefix}/separable_conv1`)
     const expansion_conv = extractConvParams(`${mappedPrefix}/expansion_conv`)
@@ -26,8 +24,7 @@ function loadParamsFactory(weightMap: any, paramMappings: ParamMapping[]) {
     return { separable_conv0, separable_conv1, expansion_conv }
   }
 
-  function extractMainBlockParams(mappedPrefix: string): MainBlockParams {
-
+  function extractMainBlockParams (mappedPrefix: string): MainBlockParams {
     const separable_conv0 = extractSeparableConvParams(`${mappedPrefix}/separable_conv0`)
     const separable_conv1 = extractSeparableConvParams(`${mappedPrefix}/separable_conv1`)
     const separable_conv2 = extractSeparableConvParams(`${mappedPrefix}/separable_conv2`)
@@ -43,11 +40,10 @@ function loadParamsFactory(weightMap: any, paramMappings: ParamMapping[]) {
   }
 }
 
-export function extractParamsFromWeigthMap(
+export function extractParamsFromWeigthMap (
   weightMap: tf.NamedTensorMap,
   numMainBlocks: number
 ): { params: TinyXceptionParams, paramMappings: ParamMapping[] } {
-
   const paramMappings: ParamMapping[] = []
 
   const {

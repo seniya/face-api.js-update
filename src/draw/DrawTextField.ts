@@ -1,6 +1,6 @@
-import { IDimensions, IPoint } from '../classes';
-import { getContext2dOrThrow } from '../dom/getContext2dOrThrow';
-import { resolveInput } from '../dom/resolveInput';
+import { IDimensions, IPoint } from '../classes'
+import { getContext2dOrThrow } from '../dom/getContext2dOrThrow'
+import { resolveInput } from '../dom/resolveInput'
 
 export enum AnchorPosition {
   TOP_LEFT = 'TOP_LEFT',
@@ -26,7 +26,7 @@ export class DrawTextFieldOptions implements IDrawTextFieldOptions {
   public fontStyle: string
   public padding: number
 
-  constructor(options: IDrawTextFieldOptions = {}) {
+  constructor (options: IDrawTextFieldOptions = {}) {
     const { anchorPosition, backgroundColor, fontColor, fontSize, fontStyle, padding } = options
     this.anchorPosition = anchorPosition || AnchorPosition.TOP_LEFT
     this.backgroundColor = backgroundColor || 'rgba(0, 0, 0, 0.5)'
@@ -42,7 +42,7 @@ export class DrawTextField {
   public anchor : IPoint
   public options: DrawTextFieldOptions
 
-  constructor(
+  constructor (
     text: string | string[] | DrawTextField,
     anchor: IPoint,
     options: IDrawTextFieldOptions = {}
@@ -54,17 +54,17 @@ export class DrawTextField {
     this.options = new DrawTextFieldOptions(options)
   }
 
-  measureWidth(ctx: CanvasRenderingContext2D): number {
+  measureWidth (ctx: CanvasRenderingContext2D): number {
     const { padding } = this.options
     return this.text.map(l => ctx.measureText(l).width).reduce((w0, w1) => w0 < w1 ? w1 : w0, 0) + (2 * padding)
   }
 
-  measureHeight(): number {
+  measureHeight (): number {
     const { fontSize, padding } = this.options
     return this.text.length * fontSize + (2 * padding)
   }
 
-  getUpperLeft(ctx: CanvasRenderingContext2D, canvasDims?: IDimensions): IPoint {
+  getUpperLeft (ctx: CanvasRenderingContext2D, canvasDims?: IDimensions): IPoint {
     const { anchorPosition } = this.options
     const isShiftLeft = anchorPosition === AnchorPosition.BOTTOM_RIGHT || anchorPosition === AnchorPosition.TOP_RIGHT
     const isShiftTop = anchorPosition === AnchorPosition.BOTTOM_LEFT || anchorPosition === AnchorPosition.BOTTOM_RIGHT
@@ -84,7 +84,7 @@ export class DrawTextField {
     return { x, y }
   }
 
-  draw(canvasArg: string | HTMLCanvasElement | CanvasRenderingContext2D) {
+  draw (canvasArg: string | HTMLCanvasElement | CanvasRenderingContext2D) {
     const canvas = resolveInput(canvasArg)
     const ctx = getContext2dOrThrow(canvas)
 
@@ -98,7 +98,7 @@ export class DrawTextField {
     const upperLeft = this.getUpperLeft(ctx, canvas)
     ctx.fillRect(upperLeft.x, upperLeft.y, maxTextWidth, textHeight)
 
-    ctx.fillStyle = fontColor;
+    ctx.fillStyle = fontColor
     this.text.forEach((textLine, i) => {
       const x = padding + upperLeft.x
       const y = padding + upperLeft.y + ((i + 1) * fontSize)

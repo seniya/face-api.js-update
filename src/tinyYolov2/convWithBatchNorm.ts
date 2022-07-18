@@ -1,9 +1,9 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { leaky } from './leaky';
-import { ConvWithBatchNorm } from './types';
+import { leaky } from './leaky'
+import { ConvWithBatchNorm } from './types'
 
-export function convWithBatchNorm(x: tf.Tensor4D, params: ConvWithBatchNorm): tf.Tensor4D  {
+export function convWithBatchNorm (x: tf.Tensor4D, params: ConvWithBatchNorm): tf.Tensor4D {
   return tf.tidy(() => {
     let out = tf.pad(x, [[0, 0], [1, 1], [1, 1], [0, 0]]) as tf.Tensor4D
 

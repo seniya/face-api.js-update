@@ -1,13 +1,13 @@
-import { IPoint, Point } from '../classes';
-import { FaceExpressions } from '../faceExpressionNet';
-import { isWithFaceDetection } from '../factories/WithFaceDetection';
-import { isWithFaceExpressions, WithFaceExpressions } from '../factories/WithFaceExpressions';
-import { round } from '../utils';
-import { DrawTextField } from './DrawTextField';
+import { IPoint, Point } from '../classes'
+import { FaceExpressions } from '../faceExpressionNet'
+import { isWithFaceDetection } from '../factories/WithFaceDetection'
+import { isWithFaceExpressions, WithFaceExpressions } from '../factories/WithFaceExpressions'
+import { round } from '../utils'
+import { DrawTextField } from './DrawTextField'
 
 export type DrawFaceExpressionsInput = FaceExpressions | WithFaceExpressions<{}>
 
-export function drawFaceExpressions(
+export function drawFaceExpressions (
   canvasArg: string | HTMLCanvasElement,
   faceExpressions: DrawFaceExpressionsInput | Array<DrawFaceExpressionsInput>,
   minConfidence = 0.1,

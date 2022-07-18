@@ -1,7 +1,7 @@
-import { bufferToImage } from './bufferToImage';
-import { fetchOrThrow } from './fetchOrThrow';
+import { bufferToImage } from './bufferToImage'
+import { fetchOrThrow } from './fetchOrThrow'
 
-export async function fetchImage(uri: string): Promise<HTMLImageElement> {
+export async function fetchImage (uri: string): Promise<HTMLImageElement> {
   const res = await fetchOrThrow(uri)
   const blob = await (res).blob()
 

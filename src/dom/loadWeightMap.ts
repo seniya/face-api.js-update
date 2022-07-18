@@ -1,11 +1,11 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { getModelUris } from '../common/getModelUris';
-import { fetchJson } from './fetchJson';
+import { getModelUris } from '../common/getModelUris'
+import { fetchJson } from './fetchJson'
 
-export async function loadWeightMap(
+export async function loadWeightMap (
   uri: string | undefined,
-  defaultModelName: string,
+  defaultModelName: string
 ): Promise<tf.NamedTensorMap> {
   const { manifestUri, modelBaseUri } = getModelUris(uri, defaultModelName)
 

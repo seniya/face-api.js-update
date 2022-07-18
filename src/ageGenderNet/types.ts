@@ -1,6 +1,6 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { FCParams } from '../common';
+import { FCParams } from '../common'
 
 export type AgeAndGenderPrediction = {
   age: number

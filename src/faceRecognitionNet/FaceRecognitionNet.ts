@@ -1,23 +1,20 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { NetInput, TNetInput, toNetInput } from '../dom';
-import { NeuralNetwork } from '../NeuralNetwork';
-import { normalize } from '../ops';
-import { convDown } from './convLayer';
-import { extractParams } from './extractParams';
-import { extractParamsFromWeigthMap } from './extractParamsFromWeigthMap';
-import { residual, residualDown } from './residualLayer';
-import { NetParams } from './types';
-
+import { NetInput, TNetInput, toNetInput } from '../dom'
+import { NeuralNetwork } from '../NeuralNetwork'
+import { normalize } from '../ops'
+import { convDown } from './convLayer'
+import { extractParams } from './extractParams'
+import { extractParamsFromWeigthMap } from './extractParamsFromWeigthMap'
+import { residual, residualDown } from './residualLayer'
+import { NetParams } from './types'
 
 export class FaceRecognitionNet extends NeuralNetwork<NetParams> {
-
-  constructor() {
+  constructor () {
     super('FaceRecognitionNet')
   }
 
-  public forwardInput(input: NetInput): tf.Tensor2D {
-
+  public forwardInput (input: NetInput): tf.Tensor2D {
     const { params } = this
 
     if (!params) {
@@ -58,11 +55,11 @@ export class FaceRecognitionNet extends NeuralNetwork<NetParams> {
     })
   }
 
-  public async forward(input: TNetInput): Promise<tf.Tensor2D> {
+  public async forward (input: TNetInput): Promise<tf.Tensor2D> {
     return this.forwardInput(await toNetInput(input))
   }
 
-  public async computeFaceDescriptor(input: TNetInput): Promise<Float32Array|Float32Array[]> {
+  public async computeFaceDescriptor (input: TNetInput): Promise<Float32Array|Float32Array[]> {
     const netInput = await toNetInput(input)
 
     const faceDescriptorTensors = tf.tidy(
@@ -80,15 +77,15 @@ export class FaceRecognitionNet extends NeuralNetwork<NetParams> {
       : faceDescriptorsForBatch[0]
   }
 
-  protected getDefaultModelName(): string {
+  protected getDefaultModelName (): string {
     return 'face_recognition_model'
   }
 
-  protected extractParamsFromWeigthMap(weightMap: tf.NamedTensorMap) {
+  protected extractParamsFromWeigthMap (weightMap: tf.NamedTensorMap) {
     return extractParamsFromWeigthMap(weightMap)
   }
 
-  protected extractParams(weights: Float32Array) {
+  protected extractParams (weights: Float32Array) {
     return extractParams(weights)
   }
 }

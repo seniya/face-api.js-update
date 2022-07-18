@@ -1,11 +1,9 @@
-import { getCenterPoint } from '../utils';
-import { FaceLandmarks } from './FaceLandmarks';
-import { Point } from './Point';
-
+import { getCenterPoint } from '../utils'
+import { FaceLandmarks } from './FaceLandmarks'
+import { Point } from './Point'
 
 export class FaceLandmarks5 extends FaceLandmarks {
-
-  protected getRefPointsForAlignment(): Point[] {
+  protected getRefPointsForAlignment (): Point[] {
     const pts = this.positions
     return [
       pts[0],

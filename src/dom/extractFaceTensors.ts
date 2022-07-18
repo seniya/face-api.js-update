@@ -1,8 +1,8 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { Rect } from '../classes';
-import { FaceDetection } from '../classes/FaceDetection';
-import { isTensor3D, isTensor4D } from '../utils';
+import { Rect } from '../classes'
+import { FaceDetection } from '../classes/FaceDetection'
+import { isTensor3D, isTensor4D } from '../utils'
 
 /**
  * Extracts the tensors of the image regions containing the detected faces.
@@ -14,11 +14,10 @@ import { isTensor3D, isTensor4D } from '../utils';
  * @param detections The face detection results or face bounding boxes for that image.
  * @returns Tensors of the corresponding image region for each detected face.
  */
-export async function extractFaceTensors(
+export async function extractFaceTensors (
   imageTensor: tf.Tensor3D | tf.Tensor4D,
   detections: Array<FaceDetection | Rect>
 ): Promise<tf.Tensor3D[]> {
-
   if (!isTensor3D(imageTensor) && !isTensor4D(imageTensor)) {
     throw new Error('extractFaceTensors - expected image tensor to be 3D or 4D')
   }

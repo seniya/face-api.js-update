@@ -9,7 +9,7 @@ export class SsdMobilenetv1Options {
   private _minConfidence: number
   private _maxResults: number
 
-  constructor({ minConfidence, maxResults }: ISsdMobilenetv1Options = {}) {
+  constructor ({ minConfidence, maxResults }: ISsdMobilenetv1Options = {}) {
     this._minConfidence = minConfidence || 0.5
     this._maxResults = maxResults || 100
 
@@ -22,6 +22,6 @@ export class SsdMobilenetv1Options {
     }
   }
 
-  get minConfidence(): number { return this._minConfidence }
-  get maxResults(): number { return this._maxResults }
+  get minConfidence (): number { return this._minConfidence }
+  get maxResults (): number { return this._maxResults }
 }

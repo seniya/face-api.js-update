@@ -1,0 +1,6 @@
+dist
+dist-old
+examples
+node_modules
+test
+weights

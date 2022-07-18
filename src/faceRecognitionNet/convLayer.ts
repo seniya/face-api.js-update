@@ -1,10 +1,9 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { scale } from './scaleLayer';
-import { ConvLayerParams } from './types';
+import { scale } from './scaleLayer'
+import { ConvLayerParams } from './types'
 
-
-function convLayer(
+function convLayer (
   x: tf.Tensor4D,
   params: ConvLayerParams,
   strides: [number, number],
@@ -19,14 +18,14 @@ function convLayer(
   return withRelu ? tf.relu(out) : out
 }
 
-export function conv(x: tf.Tensor4D, params: ConvLayerParams) {
+export function conv (x: tf.Tensor4D, params: ConvLayerParams) {
   return convLayer(x, params, [1, 1], true)
 }
 
-export function convNoRelu(x: tf.Tensor4D, params: ConvLayerParams) {
+export function convNoRelu (x: tf.Tensor4D, params: ConvLayerParams) {
   return convLayer(x, params, [1, 1], false)
 }
 
-export function convDown(x: tf.Tensor4D, params: ConvLayerParams) {
+export function convDown (x: tf.Tensor4D, params: ConvLayerParams) {
   return convLayer(x, params, [2, 2], true, 'valid')
 }

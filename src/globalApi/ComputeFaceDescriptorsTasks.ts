@@ -1,21 +1,21 @@
-import { TNetInput } from '../dom';
-import { extendWithFaceDescriptor, WithFaceDescriptor } from '../factories/WithFaceDescriptor';
-import { WithFaceDetection } from '../factories/WithFaceDetection';
-import { WithFaceLandmarks } from '../factories/WithFaceLandmarks';
-import { ComposableTask } from './ComposableTask';
-import { extractAllFacesAndComputeResults, extractSingleFaceAndComputeResult } from './extractFacesAndComputeResults';
-import { nets } from './nets';
+import { TNetInput } from '../dom'
+import { extendWithFaceDescriptor, WithFaceDescriptor } from '../factories/WithFaceDescriptor'
+import { WithFaceDetection } from '../factories/WithFaceDetection'
+import { WithFaceLandmarks } from '../factories/WithFaceLandmarks'
+import { ComposableTask } from './ComposableTask'
+import { extractAllFacesAndComputeResults, extractSingleFaceAndComputeResult } from './extractFacesAndComputeResults'
+import { nets } from './nets'
 import {
   PredictAllAgeAndGenderWithFaceAlignmentTask,
-  PredictSingleAgeAndGenderWithFaceAlignmentTask,
-} from './PredictAgeAndGenderTask';
+  PredictSingleAgeAndGenderWithFaceAlignmentTask
+} from './PredictAgeAndGenderTask'
 import {
   PredictAllFaceExpressionsWithFaceAlignmentTask,
-  PredictSingleFaceExpressionsWithFaceAlignmentTask,
-} from './PredictFaceExpressionsTask';
+  PredictSingleFaceExpressionsWithFaceAlignmentTask
+} from './PredictFaceExpressionsTask'
 
 export class ComputeFaceDescriptorsTaskBase<TReturn, TParentReturn> extends ComposableTask<TReturn> {
-  constructor(
+  constructor (
     protected parentTask: ComposableTask<TParentReturn> | Promise<TParentReturn>,
     protected input: TNetInput
   ) {
@@ -26,9 +26,7 @@ export class ComputeFaceDescriptorsTaskBase<TReturn, TParentReturn> extends Comp
 export class ComputeAllFaceDescriptorsTask<
   TSource extends WithFaceLandmarks<WithFaceDetection<{}>>
 > extends ComputeFaceDescriptorsTaskBase<WithFaceDescriptor<TSource>[], TSource[]> {
-
-  public async run(): Promise<WithFaceDescriptor<TSource>[]> {
-
+  public async run (): Promise<WithFaceDescriptor<TSource>[]> {
     const parentResults = await this.parentTask
 
     const descriptors = await extractAllFacesAndComputeResults<TSource, Float32Array[]>(
@@ -44,11 +42,11 @@ export class ComputeAllFaceDescriptorsTask<
     return descriptors.map((descriptor, i) => extendWithFaceDescriptor<TSource>(parentResults[i], descriptor))
   }
 
-  withFaceExpressions() {
+  withFaceExpressions () {
     return new PredictAllFaceExpressionsWithFaceAlignmentTask(this, this.input)
   }
 
-  withAgeAndGender() {
+  withAgeAndGender () {
     return new PredictAllAgeAndGenderWithFaceAlignmentTask(this, this.input)
   }
 }
@@ -56,9 +54,7 @@ export class ComputeAllFaceDescriptorsTask<
 export class ComputeSingleFaceDescriptorTask<
   TSource extends WithFaceLandmarks<WithFaceDetection<{}>>
 > extends ComputeFaceDescriptorsTaskBase<WithFaceDescriptor<TSource> | undefined, TSource | undefined> {
-
-  public async run(): Promise<WithFaceDescriptor<TSource> | undefined> {
-
+  public async run (): Promise<WithFaceDescriptor<TSource> | undefined> {
     const parentResult = await this.parentTask
     if (!parentResult) {
       return
@@ -74,11 +70,11 @@ export class ComputeSingleFaceDescriptorTask<
     return extendWithFaceDescriptor(parentResult, descriptor)
   }
 
-  withFaceExpressions() {
+  withFaceExpressions () {
     return new PredictSingleFaceExpressionsWithFaceAlignmentTask(this, this.input)
   }
 
-  withAgeAndGender() {
+  withAgeAndGender () {
     return new PredictSingleAgeAndGenderWithFaceAlignmentTask(this, this.input)
   }
 }

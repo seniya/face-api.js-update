@@ -1,6 +1,6 @@
-import { Point } from '../classes';
+import { Point } from '../classes'
 
-export function drawContour(
+export function drawContour (
   ctx: CanvasRenderingContext2D,
   points: Point[],
   isClosed: boolean = false

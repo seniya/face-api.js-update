@@ -1,11 +1,11 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { FaceDetection } from '../classes/FaceDetection';
-import { extractFaces, extractFaceTensors, TNetInput } from '../dom';
-import { WithFaceDetection } from '../factories/WithFaceDetection';
-import { isWithFaceLandmarks, WithFaceLandmarks } from '../factories/WithFaceLandmarks';
+import { FaceDetection } from '../classes/FaceDetection'
+import { extractFaces, extractFaceTensors, TNetInput } from '../dom'
+import { WithFaceDetection } from '../factories/WithFaceDetection'
+import { isWithFaceLandmarks, WithFaceLandmarks } from '../factories/WithFaceLandmarks'
 
-export async function extractAllFacesAndComputeResults<TSource extends WithFaceDetection<{}>, TResult>(
+export async function extractAllFacesAndComputeResults<TSource extends WithFaceDetection<{}>, TResult> (
   parentResults: TSource[],
   input: TNetInput,
   computeResults: (faces: Array<HTMLCanvasElement | tf.Tensor3D>) => Promise<TResult>,
@@ -30,7 +30,7 @@ export async function extractAllFacesAndComputeResults<TSource extends WithFaceD
   return results
 }
 
-export async function extractSingleFaceAndComputeResult<TSource extends WithFaceDetection<{}>, TResult>(
+export async function extractSingleFaceAndComputeResult<TSource extends WithFaceDetection<{}>, TResult> (
   parentResult: TSource,
   input: TNetInput,
   computeResult: (face: HTMLCanvasElement | tf.Tensor3D) => Promise<TResult>,

@@ -1,11 +1,10 @@
-import { Dimensions, IDimensions } from './classes';
-import { FaceDetection } from './classes/FaceDetection';
-import { FaceLandmarks } from './classes/FaceLandmarks';
-import { extendWithFaceDetection, isWithFaceDetection } from './factories/WithFaceDetection';
-import { extendWithFaceLandmarks, isWithFaceLandmarks } from './factories/WithFaceLandmarks';
+import { Dimensions, IDimensions } from './classes'
+import { FaceDetection } from './classes/FaceDetection'
+import { FaceLandmarks } from './classes/FaceLandmarks'
+import { extendWithFaceDetection, isWithFaceDetection } from './factories/WithFaceDetection'
+import { extendWithFaceLandmarks, isWithFaceLandmarks } from './factories/WithFaceLandmarks'
 
-export function resizeResults<T>(results: T, dimensions: IDimensions): T {
-
+export function resizeResults<T> (results: T, dimensions: IDimensions): T {
   const { width, height } = new Dimensions(dimensions.width, dimensions.height)
 
   if (width <= 0 || height <= 0) {

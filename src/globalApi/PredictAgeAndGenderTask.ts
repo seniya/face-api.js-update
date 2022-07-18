@@ -1,24 +1,24 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { AgeAndGenderPrediction } from '../ageGenderNet/types';
-import { TNetInput } from '../dom';
-import { extendWithAge, WithAge } from '../factories/WithAge';
-import { WithFaceDetection } from '../factories/WithFaceDetection';
-import { WithFaceLandmarks } from '../factories/WithFaceLandmarks';
-import { extendWithGender, WithGender } from '../factories/WithGender';
-import { ComposableTask } from './ComposableTask';
-import { ComputeAllFaceDescriptorsTask, ComputeSingleFaceDescriptorTask } from './ComputeFaceDescriptorsTasks';
-import { extractAllFacesAndComputeResults, extractSingleFaceAndComputeResult } from './extractFacesAndComputeResults';
-import { nets } from './nets';
+import { AgeAndGenderPrediction } from '../ageGenderNet/types'
+import { TNetInput } from '../dom'
+import { extendWithAge, WithAge } from '../factories/WithAge'
+import { WithFaceDetection } from '../factories/WithFaceDetection'
+import { WithFaceLandmarks } from '../factories/WithFaceLandmarks'
+import { extendWithGender, WithGender } from '../factories/WithGender'
+import { ComposableTask } from './ComposableTask'
+import { ComputeAllFaceDescriptorsTask, ComputeSingleFaceDescriptorTask } from './ComputeFaceDescriptorsTasks'
+import { extractAllFacesAndComputeResults, extractSingleFaceAndComputeResult } from './extractFacesAndComputeResults'
+import { nets } from './nets'
 import {
   PredictAllFaceExpressionsTask,
   PredictAllFaceExpressionsWithFaceAlignmentTask,
   PredictSingleFaceExpressionsTask,
-  PredictSingleFaceExpressionsWithFaceAlignmentTask,
-} from './PredictFaceExpressionsTask';
+  PredictSingleFaceExpressionsWithFaceAlignmentTask
+} from './PredictFaceExpressionsTask'
 
 export class PredictAgeAndGenderTaskBase<TReturn, TParentReturn> extends ComposableTask<TReturn> {
-  constructor(
+  constructor (
     protected parentTask: ComposableTask<TParentReturn> | Promise<TParentReturn>,
     protected input: TNetInput,
     protected extractedFaces?: Array<HTMLCanvasElement | tf.Tensor3D>
@@ -30,9 +30,7 @@ export class PredictAgeAndGenderTaskBase<TReturn, TParentReturn> extends Composa
 export class PredictAllAgeAndGenderTask<
   TSource extends WithFaceDetection<{}>
 > extends PredictAgeAndGenderTaskBase<WithAge<WithGender<TSource>>[], TSource[]> {
-
-  public async run(): Promise<WithAge<WithGender<TSource>>[]> {
-
+  public async run (): Promise<WithAge<WithGender<TSource>>[]> {
     const parentResults = await this.parentTask
 
     const ageAndGenderByFace = await extractAllFacesAndComputeResults<TSource, AgeAndGenderPrediction[]>(
@@ -50,17 +48,15 @@ export class PredictAllAgeAndGenderTask<
     })
   }
 
-  withFaceExpressions() {
+  withFaceExpressions () {
     return new PredictAllFaceExpressionsTask(this, this.input)
   }
 }
 
 export class PredictSingleAgeAndGenderTask<
   TSource extends WithFaceDetection<{}>
->  extends PredictAgeAndGenderTaskBase<WithAge<WithGender<TSource>> | undefined, TSource | undefined> {
-
-  public async run(): Promise<WithAge<WithGender<TSource>> | undefined> {
-
+> extends PredictAgeAndGenderTaskBase<WithAge<WithGender<TSource>> | undefined, TSource | undefined> {
+  public async run (): Promise<WithAge<WithGender<TSource>> | undefined> {
     const parentResult = await this.parentTask
     if (!parentResult) {
       return
@@ -76,7 +72,7 @@ export class PredictSingleAgeAndGenderTask<
     return extendWithAge(extendWithGender(parentResult, gender, genderProbability), age)
   }
 
-  withFaceExpressions() {
+  withFaceExpressions () {
     return new PredictSingleFaceExpressionsTask(this, this.input)
   }
 }
@@ -84,12 +80,11 @@ export class PredictSingleAgeAndGenderTask<
 export class PredictAllAgeAndGenderWithFaceAlignmentTask<
   TSource extends WithFaceLandmarks<WithFaceDetection<{}>>
 > extends PredictAllAgeAndGenderTask<TSource> {
-
-  withFaceExpressions() {
+  withFaceExpressions () {
     return new PredictAllFaceExpressionsWithFaceAlignmentTask(this, this.input)
   }
 
-  withFaceDescriptors() {
+  withFaceDescriptors () {
     return new ComputeAllFaceDescriptorsTask(this, this.input)
   }
 }
@@ -97,12 +92,11 @@ export class PredictAllAgeAndGenderWithFaceAlignmentTask<
 export class PredictSingleAgeAndGenderWithFaceAlignmentTask<
   TSource extends WithFaceLandmarks<WithFaceDetection<{}>>
 > extends PredictSingleAgeAndGenderTask<TSource> {
-
-  withFaceExpressions() {
+  withFaceExpressions () {
     return new PredictSingleFaceExpressionsWithFaceAlignmentTask(this, this.input)
   }
 
-  withFaceDescriptor() {
+  withFaceDescriptor () {
     return new ComputeSingleFaceDescriptorTask(this, this.input)
   }
 }

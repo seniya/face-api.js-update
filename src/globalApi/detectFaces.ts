@@ -1,16 +1,16 @@
-import { TNetInput } from '../dom';
-import { SsdMobilenetv1Options } from '../ssdMobilenetv1/SsdMobilenetv1Options';
-import { DetectAllFacesTask, DetectSingleFaceTask } from './DetectFacesTasks';
-import { FaceDetectionOptions } from './types';
+import { TNetInput } from '../dom'
+import { SsdMobilenetv1Options } from '../ssdMobilenetv1/SsdMobilenetv1Options'
+import { DetectAllFacesTask, DetectSingleFaceTask } from './DetectFacesTasks'
+import { FaceDetectionOptions } from './types'
 
-export function detectSingleFace(
+export function detectSingleFace (
   input: TNetInput,
   options: FaceDetectionOptions = new SsdMobilenetv1Options()
 ): DetectSingleFaceTask {
   return new DetectSingleFaceTask(input, options)
 }
 
-export function detectAllFaces(
+export function detectAllFaces (
   input: TNetInput,
   options: FaceDetectionOptions = new SsdMobilenetv1Options()
 ): DetectAllFacesTask {

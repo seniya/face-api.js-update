@@ -16,7 +16,7 @@ export class TinyYolov2Options {
   private _inputSize: number
   private _scoreThreshold: number
 
-  constructor({ inputSize, scoreThreshold }: ITinyYolov2Options = {}) {
+  constructor ({ inputSize, scoreThreshold }: ITinyYolov2Options = {}) {
     this._inputSize = inputSize || 416
     this._scoreThreshold = scoreThreshold || 0.5
 
@@ -29,6 +29,6 @@ export class TinyYolov2Options {
     }
   }
 
-  get inputSize(): number { return this._inputSize }
-  get scoreThreshold(): number { return this._scoreThreshold }
+  get inputSize (): number { return this._inputSize }
+  get scoreThreshold (): number { return this._scoreThreshold }
 }

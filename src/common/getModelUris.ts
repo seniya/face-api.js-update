@@ -1,4 +1,4 @@
-export function getModelUris(uri: string | undefined, defaultModelName: string) {
+export function getModelUris (uri: string | undefined, defaultModelName: string) {
   const defaultManifestFilename = `${defaultModelName}-weights_manifest.json`
 
   if (!uri) {
@@ -14,8 +14,8 @@ export function getModelUris(uri: string | undefined, defaultModelName: string) 
       manifestUri: `/${defaultManifestFilename}`
     }
   }
-  const protocol = uri.startsWith('http://') ? 'http://' : uri.startsWith('https://') ? 'https://' : '';
-  uri = uri.replace(protocol, '');
+  const protocol = uri.startsWith('http://') ? 'http://' : uri.startsWith('https://') ? 'https://' : ''
+  uri = uri.replace(protocol, '')
 
   const parts = uri.split('/').filter(s => s)
 

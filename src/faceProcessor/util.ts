@@ -1,7 +1,6 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-export function seperateWeightMaps(weightMap: tf.NamedTensorMap) {
-
+export function seperateWeightMaps (weightMap: tf.NamedTensorMap) {
   const featureExtractorMap: tf.NamedTensorMap = {}
   const classifierMap: tf.NamedTensorMap = {}
 
@@ -11,5 +10,4 @@ export function seperateWeightMaps(weightMap: tf.NamedTensorMap) {
   })
 
   return { featureExtractorMap, classifierMap }
-
 }

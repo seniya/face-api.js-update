@@ -1,10 +1,8 @@
-import { extractWeightsFactory, ParamMapping } from '../common';
-import { extractorsFactory } from './extractorsFactory';
-import { FaceFeatureExtractorParams } from './types';
+import { extractWeightsFactory, ParamMapping } from '../common'
+import { extractorsFactory } from './extractorsFactory'
+import { FaceFeatureExtractorParams } from './types'
 
-
-export function extractParams(weights: Float32Array): { params: FaceFeatureExtractorParams, paramMappings: ParamMapping[] } {
-
+export function extractParams (weights: Float32Array): { params: FaceFeatureExtractorParams, paramMappings: ParamMapping[] } {
   const paramMappings: ParamMapping[] = []
 
   const {

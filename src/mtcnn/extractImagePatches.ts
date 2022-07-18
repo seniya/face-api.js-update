@@ -1,17 +1,15 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { Box, IDimensions } from '../classes';
-import { createCanvas, createCanvasFromMedia, getContext2dOrThrow } from '../dom';
-import { env } from '../env';
-import { normalize } from './normalize';
+import { Box, IDimensions } from '../classes'
+import { createCanvas, createCanvasFromMedia, getContext2dOrThrow } from '../dom'
+import { env } from '../env'
+import { normalize } from './normalize'
 
-export async function extractImagePatches(
+export async function extractImagePatches (
   img: HTMLCanvasElement,
   boxes: Box[],
   { width, height }: IDimensions
 ): Promise<tf.Tensor4D[]> {
-
-
   const imgCtx = getContext2dOrThrow(img)
 
   const bitmaps = await Promise.all(boxes.map(async box => {
@@ -35,14 +33,13 @@ export async function extractImagePatches(
 
     const currData = []
     // RGBA -> BGR
-    for(let i = 0; i < data.length; i+=4) {
+    for (let i = 0; i < data.length; i += 4) {
       currData.push(data[i + 2])
       currData.push(data[i + 1])
       currData.push(data[i])
     }
     imagePatchesDatas.push(currData)
   })
-
 
   return imagePatchesDatas.map(data => {
     const t = tf.tidy(() => {

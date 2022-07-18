@@ -1,27 +1,24 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { Rect } from '../classes';
-import { FaceDetection } from '../classes/FaceDetection';
-import { NetInput, TNetInput, toNetInput } from '../dom';
-import { NeuralNetwork } from '../NeuralNetwork';
-import { extractParams } from './extractParams';
-import { extractParamsFromWeigthMap } from './extractParamsFromWeigthMap';
-import { mobileNetV1 } from './mobileNetV1';
-import { nonMaxSuppression } from './nonMaxSuppression';
-import { outputLayer } from './outputLayer';
-import { predictionLayer } from './predictionLayer';
-import { ISsdMobilenetv1Options, SsdMobilenetv1Options } from './SsdMobilenetv1Options';
-import { NetParams } from './types';
-
+import { Rect } from '../classes'
+import { FaceDetection } from '../classes/FaceDetection'
+import { NetInput, TNetInput, toNetInput } from '../dom'
+import { NeuralNetwork } from '../NeuralNetwork'
+import { extractParams } from './extractParams'
+import { extractParamsFromWeigthMap } from './extractParamsFromWeigthMap'
+import { mobileNetV1 } from './mobileNetV1'
+import { nonMaxSuppression } from './nonMaxSuppression'
+import { outputLayer } from './outputLayer'
+import { predictionLayer } from './predictionLayer'
+import { ISsdMobilenetv1Options, SsdMobilenetv1Options } from './SsdMobilenetv1Options'
+import { NetParams } from './types'
 
 export class SsdMobilenetv1 extends NeuralNetwork<NetParams> {
-
-  constructor() {
+  constructor () {
     super('SsdMobilenetv1')
   }
 
-  public forwardInput(input: NetInput) {
-
+  public forwardInput (input: NetInput) {
     const { params } = this
 
     if (!params) {
@@ -43,15 +40,14 @@ export class SsdMobilenetv1 extends NeuralNetwork<NetParams> {
     })
   }
 
-  public async forward(input: TNetInput) {
+  public async forward (input: TNetInput) {
     return this.forwardInput(await toNetInput(input))
   }
 
-  public async locateFaces(
+  public async locateFaces (
     input: TNetInput,
     options: ISsdMobilenetv1Options = {}
   ): Promise<FaceDetection[]> {
-
     const { maxResults, minConfidence } = new SsdMobilenetv1Options(options)
 
     const netInput = await toNetInput(input)
@@ -60,7 +56,6 @@ export class SsdMobilenetv1 extends NeuralNetwork<NetParams> {
       boxes: _boxes,
       scores: _scores
     } = this.forwardInput(netInput)
-
 
     // TODO batches
     const boxes = _boxes[0]
@@ -119,15 +114,15 @@ export class SsdMobilenetv1 extends NeuralNetwork<NetParams> {
     return results
   }
 
-  protected getDefaultModelName(): string {
+  protected getDefaultModelName (): string {
     return 'ssd_mobilenetv1_model'
   }
 
-  protected extractParamsFromWeigthMap(weightMap: tf.NamedTensorMap) {
+  protected extractParamsFromWeigthMap (weightMap: tf.NamedTensorMap) {
     return extractParamsFromWeigthMap(weightMap)
   }
 
-  protected extractParams(weights: Float32Array) {
+  protected extractParams (weights: Float32Array) {
     return extractParams(weights)
   }
 }

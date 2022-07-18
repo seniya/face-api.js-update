@@ -1,6 +1,6 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-export function normalize(x: tf.Tensor4D, meanRgb: number[]): tf.Tensor4D {
+export function normalize (x: tf.Tensor4D, meanRgb: number[]): tf.Tensor4D {
   return tf.tidy(() => {
     const [r, g, b] = meanRgb
     const avg_r = tf.fill([...x.shape.slice(0, 3), 1], r)

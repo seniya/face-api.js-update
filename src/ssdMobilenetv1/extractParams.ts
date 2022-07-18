@@ -1,12 +1,10 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { ExtractWeightsFunction, ParamMapping, ConvParams, extractWeightsFactory } from '../common';
-import { MobileNetV1, NetParams, PointwiseConvParams, PredictionLayerParams } from './types';
+import { ExtractWeightsFunction, ParamMapping, ConvParams, extractWeightsFactory } from '../common'
+import { MobileNetV1, NetParams, PointwiseConvParams, PredictionLayerParams } from './types'
 
-function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings: ParamMapping[]) {
-
-  function extractDepthwiseConvParams(numChannels: number, mappedPrefix: string): MobileNetV1.DepthwiseConvParams {
-
+function extractorsFactory (extractWeights: ExtractWeightsFunction, paramMappings: ParamMapping[]) {
+  function extractDepthwiseConvParams (numChannels: number, mappedPrefix: string): MobileNetV1.DepthwiseConvParams {
     const filters = tf.tensor4d(extractWeights(3 * 3 * numChannels), [3, 3, numChannels, 1])
     const batch_norm_scale = tf.tensor1d(extractWeights(numChannels))
     const batch_norm_offset = tf.tensor1d(extractWeights(numChannels))
@@ -30,14 +28,13 @@ function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings
     }
   }
 
-  function extractConvParams(
+  function extractConvParams (
     channelsIn: number,
     channelsOut: number,
     filterSize: number,
     mappedPrefix: string,
     isPointwiseConv?: boolean
   ): ConvParams {
-
     const filters = tf.tensor4d(
       extractWeights(channelsIn * channelsOut * filterSize * filterSize),
       [filterSize, filterSize, channelsIn, channelsOut]
@@ -52,13 +49,12 @@ function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings
     return { filters, bias }
   }
 
-  function extractPointwiseConvParams(
+  function extractPointwiseConvParams (
     channelsIn: number,
     channelsOut: number,
     filterSize: number,
     mappedPrefix: string
   ): PointwiseConvParams {
-
     const {
       filters,
       bias
@@ -70,20 +66,18 @@ function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings
     }
   }
 
-  function extractConvPairParams(
+  function extractConvPairParams (
     channelsIn: number,
     channelsOut: number,
     mappedPrefix: string
   ): MobileNetV1.ConvPairParams {
-
     const depthwise_conv = extractDepthwiseConvParams(channelsIn, `${mappedPrefix}/depthwise_conv`)
     const pointwise_conv = extractPointwiseConvParams(channelsIn, channelsOut, 1, `${mappedPrefix}/pointwise_conv`)
 
     return { depthwise_conv, pointwise_conv }
   }
 
-  function extractMobilenetV1Params(): MobileNetV1.Params {
-
+  function extractMobilenetV1Params (): MobileNetV1.Params {
     const conv_0 = extractPointwiseConvParams(3, 32, 3, 'mobilenetv1/conv_0')
 
     const conv_1 = extractConvPairParams(32, 64, 'mobilenetv1/conv_1')
@@ -118,7 +112,7 @@ function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings
     }
   }
 
-  function extractPredictionLayerParams(): PredictionLayerParams {
+  function extractPredictionLayerParams (): PredictionLayerParams {
     const conv_0 = extractPointwiseConvParams(1024, 256, 1, 'prediction_layer/conv_0')
     const conv_1 = extractPointwiseConvParams(256, 512, 3, 'prediction_layer/conv_1')
     const conv_2 = extractPointwiseConvParams(512, 128, 1, 'prediction_layer/conv_2')
@@ -188,11 +182,9 @@ function extractorsFactory(extractWeights: ExtractWeightsFunction, paramMappings
     extractMobilenetV1Params,
     extractPredictionLayerParams
   }
-
 }
 
-export function extractParams(weights: Float32Array): { params: NetParams, paramMappings: ParamMapping[] } {
-
+export function extractParams (weights: Float32Array): { params: NetParams, paramMappings: ParamMapping[] } {
   const paramMappings: ParamMapping[] = []
 
   const {

@@ -1,8 +1,8 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { ConvParams } from './types';
+import { ConvParams } from './types'
 
-export function convLayer(
+export function convLayer (
   x: tf.Tensor4D,
   params: ConvParams,
   padding: 'valid' | 'same' = 'same',

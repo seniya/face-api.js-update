@@ -1,29 +1,27 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { fullyConnectedLayer } from '../common/fullyConnectedLayer';
-import { seperateWeightMaps } from '../faceProcessor/util';
-import { TinyXception } from '../xception/TinyXception';
-import { extractParams } from './extractParams';
-import { extractParamsFromWeigthMap } from './extractParamsFromWeigthMap';
-import { AgeAndGenderPrediction, Gender, NetOutput, NetParams } from './types';
-import { NeuralNetwork } from '../NeuralNetwork';
-import { NetInput, TNetInput, toNetInput } from '../dom';
+import { fullyConnectedLayer } from '../common/fullyConnectedLayer'
+import { seperateWeightMaps } from '../faceProcessor/util'
+import { TinyXception } from '../xception/TinyXception'
+import { extractParams } from './extractParams'
+import { extractParamsFromWeigthMap } from './extractParamsFromWeigthMap'
+import { AgeAndGenderPrediction, Gender, NetOutput, NetParams } from './types'
+import { NeuralNetwork } from '../NeuralNetwork'
+import { NetInput, TNetInput, toNetInput } from '../dom'
 
 export class AgeGenderNet extends NeuralNetwork<NetParams> {
-
   private _faceFeatureExtractor: TinyXception
 
-  constructor(faceFeatureExtractor: TinyXception = new TinyXception(2)) {
+  constructor (faceFeatureExtractor: TinyXception = new TinyXception(2)) {
     super('AgeGenderNet')
     this._faceFeatureExtractor = faceFeatureExtractor
   }
 
-  public get faceFeatureExtractor(): TinyXception {
+  public get faceFeatureExtractor (): TinyXception {
     return this._faceFeatureExtractor
   }
 
-  public runNet(input: NetInput | tf.Tensor4D): NetOutput {
-
+  public runNet (input: NetInput | tf.Tensor4D): NetOutput {
     const { params } = this
 
     if (!params) {
@@ -42,18 +40,18 @@ export class AgeGenderNet extends NeuralNetwork<NetParams> {
     })
   }
 
-  public forwardInput(input: NetInput | tf.Tensor4D): NetOutput {
+  public forwardInput (input: NetInput | tf.Tensor4D): NetOutput {
     return tf.tidy(() => {
       const { age, gender } = this.runNet(input)
       return { age, gender: tf.softmax(gender) }
     })
   }
 
-  public async forward(input: TNetInput): Promise<NetOutput> {
+  public async forward (input: TNetInput): Promise<NetOutput> {
     return this.forwardInput(await toNetInput(input))
   }
 
-  public async predictAgeAndGender(input: TNetInput): Promise<AgeAndGenderPrediction | AgeAndGenderPrediction[]> {
+  public async predictAgeAndGender (input: TNetInput): Promise<AgeAndGenderPrediction | AgeAndGenderPrediction[]> {
     const netInput = await toNetInput(input)
     const out = await this.forwardInput(netInput)
 
@@ -85,27 +83,26 @@ export class AgeGenderNet extends NeuralNetwork<NetParams> {
       : predictionsByBatch[0]
   }
 
-  protected getDefaultModelName(): string {
+  protected getDefaultModelName (): string {
     return 'age_gender_model'
   }
 
-  public dispose(throwOnRedispose: boolean = true) {
+  public dispose (throwOnRedispose: boolean = true) {
     this.faceFeatureExtractor.dispose(throwOnRedispose)
     super.dispose(throwOnRedispose)
   }
 
-  public loadClassifierParams(weights: Float32Array) {
+  public loadClassifierParams (weights: Float32Array) {
     const { params, paramMappings } = this.extractClassifierParams(weights)
     this._params = params
     this._paramMappings = paramMappings
   }
 
-  public extractClassifierParams(weights: Float32Array) {
+  public extractClassifierParams (weights: Float32Array) {
     return extractParams(weights)
   }
 
-  protected extractParamsFromWeigthMap(weightMap: tf.NamedTensorMap) {
-
+  protected extractParamsFromWeigthMap (weightMap: tf.NamedTensorMap) {
     const { featureExtractorMap, classifierMap } = seperateWeightMaps(weightMap)
 
     this.faceFeatureExtractor.loadFromWeightMap(featureExtractorMap)
@@ -113,8 +110,7 @@ export class AgeGenderNet extends NeuralNetwork<NetParams> {
     return extractParamsFromWeigthMap(classifierMap)
   }
 
-  protected extractParams(weights: Float32Array) {
-
+  protected extractParams (weights: Float32Array) {
     const classifierWeightSize = (512 * 1 + 1) + (512 * 2 + 2)
 
     const featureExtractorWeights = weights.slice(0, weights.length - classifierWeightSize)

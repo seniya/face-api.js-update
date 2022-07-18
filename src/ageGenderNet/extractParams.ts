@@ -1,8 +1,7 @@
-import { extractFCParamsFactory, extractWeightsFactory, ParamMapping } from '../common';
-import { NetParams } from './types';
+import { extractFCParamsFactory, extractWeightsFactory, ParamMapping } from '../common'
+import { NetParams } from './types'
 
-export function extractParams(weights: Float32Array): { params: NetParams, paramMappings: ParamMapping[] } {
-
+export function extractParams (weights: Float32Array): { params: NetParams, paramMappings: ParamMapping[] } {
   const paramMappings: ParamMapping[] = []
 
   const {

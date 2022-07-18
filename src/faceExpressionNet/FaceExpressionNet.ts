@@ -1,26 +1,25 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { NetInput, TNetInput, toNetInput } from '../dom';
-import { FaceFeatureExtractor } from '../faceFeatureExtractor/FaceFeatureExtractor';
-import { FaceFeatureExtractorParams } from '../faceFeatureExtractor/types';
-import { FaceProcessor } from '../faceProcessor/FaceProcessor';
-import { FaceExpressions } from './FaceExpressions';
+import { NetInput, TNetInput, toNetInput } from '../dom'
+import { FaceFeatureExtractor } from '../faceFeatureExtractor/FaceFeatureExtractor'
+import { FaceFeatureExtractorParams } from '../faceFeatureExtractor/types'
+import { FaceProcessor } from '../faceProcessor/FaceProcessor'
+import { FaceExpressions } from './FaceExpressions'
 
 export class FaceExpressionNet extends FaceProcessor<FaceFeatureExtractorParams> {
-
-  constructor(faceFeatureExtractor: FaceFeatureExtractor = new FaceFeatureExtractor()) {
+  constructor (faceFeatureExtractor: FaceFeatureExtractor = new FaceFeatureExtractor()) {
     super('FaceExpressionNet', faceFeatureExtractor)
   }
 
-  public forwardInput(input: NetInput | tf.Tensor4D): tf.Tensor2D {
+  public forwardInput (input: NetInput | tf.Tensor4D): tf.Tensor2D {
     return tf.tidy(() => tf.softmax(this.runNet(input)))
   }
 
-  public async forward(input: TNetInput): Promise<tf.Tensor2D> {
+  public async forward (input: TNetInput): Promise<tf.Tensor2D> {
     return this.forwardInput(await toNetInput(input))
   }
 
-  public async predictExpressions(input: TNetInput) {
+  public async predictExpressions (input: TNetInput) {
     const netInput = await toNetInput(input)
     const out = await this.forwardInput(netInput)
     const probabilitesByBatch = await Promise.all(tf.unstack(out).map(async t => {
@@ -38,15 +37,15 @@ export class FaceExpressionNet extends FaceProcessor<FaceFeatureExtractorParams>
       : predictionsByBatch[0]
   }
 
-  protected getDefaultModelName(): string {
+  protected getDefaultModelName (): string {
     return 'face_expression_model'
   }
 
-  protected getClassifierChannelsIn(): number {
+  protected getClassifierChannelsIn (): number {
     return 256
   }
 
-  protected getClassifierChannelsOut(): number {
+  protected getClassifierChannelsOut (): number {
     return 7
   }
 }

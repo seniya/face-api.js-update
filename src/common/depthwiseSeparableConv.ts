@@ -1,8 +1,8 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { SeparableConvParams } from './types';
+import { SeparableConvParams } from './types'
 
-export function depthwiseSeparableConv(
+export function depthwiseSeparableConv (
   x: tf.Tensor4D,
   params: SeparableConvParams,
   stride: [number, number]

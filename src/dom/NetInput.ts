@@ -1,12 +1,12 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { Dimensions } from '../classes/Dimensions';
-import { env } from '../env';
-import { padToSquare } from '../ops/padToSquare';
-import { computeReshapedDimensions, isTensor3D, isTensor4D, range } from '../utils';
-import { createCanvasFromMedia } from './createCanvas';
-import { imageToSquare } from './imageToSquare';
-import { TResolvedNetInput } from './types';
+import { Dimensions } from '../classes/Dimensions'
+import { env } from '../env'
+import { padToSquare } from '../ops/padToSquare'
+import { computeReshapedDimensions, isTensor3D, isTensor4D, range } from '../utils'
+import { createCanvasFromMedia } from './createCanvas'
+import { imageToSquare } from './imageToSquare'
+import { TResolvedNetInput } from './types'
 
 export class NetInput {
   private _imageTensors: Array<tf.Tensor3D | tf.Tensor4D> = []
@@ -17,7 +17,7 @@ export class NetInput {
   private _inputDimensions: number[][] = []
   private _inputSize: number
 
-  constructor(
+  constructor (
     inputs: Array<TResolvedNetInput>,
     treatAsBatchInput: boolean = false
   ) {
@@ -29,7 +29,6 @@ export class NetInput {
     this._batchSize = inputs.length
 
     inputs.forEach((input, idx) => {
-
       if (isTensor3D(input)) {
         this._imageTensors[idx] = input
         this._inputDimensions[idx] = input.shape
@@ -53,53 +52,53 @@ export class NetInput {
     })
   }
 
-  public get imageTensors(): Array<tf.Tensor3D | tf.Tensor4D> {
+  public get imageTensors (): Array<tf.Tensor3D | tf.Tensor4D> {
     return this._imageTensors
   }
 
-  public get canvases(): HTMLCanvasElement[] {
+  public get canvases (): HTMLCanvasElement[] {
     return this._canvases
   }
 
-  public get isBatchInput(): boolean {
+  public get isBatchInput (): boolean {
     return this.batchSize > 1 || this._treatAsBatchInput
   }
 
-  public get batchSize(): number {
+  public get batchSize (): number {
     return this._batchSize
   }
 
-  public get inputDimensions(): number[][] {
+  public get inputDimensions (): number[][] {
     return this._inputDimensions
   }
 
-  public get inputSize(): number | undefined {
+  public get inputSize (): number | undefined {
     return this._inputSize
   }
 
-  public get reshapedInputDimensions(): Dimensions[] {
+  public get reshapedInputDimensions (): Dimensions[] {
     return range(this.batchSize, 0, 1).map(
       (_, batchIdx) => this.getReshapedInputDimensions(batchIdx)
     )
   }
 
-  public getInput(batchIdx: number): tf.Tensor3D  | tf.Tensor4D | HTMLCanvasElement {
+  public getInput (batchIdx: number): tf.Tensor3D | tf.Tensor4D | HTMLCanvasElement {
     return this.canvases[batchIdx] || this.imageTensors[batchIdx]
   }
 
-  public getInputDimensions(batchIdx: number): number[] {
+  public getInputDimensions (batchIdx: number): number[] {
     return this._inputDimensions[batchIdx]
   }
 
-  public getInputHeight(batchIdx: number): number {
+  public getInputHeight (batchIdx: number): number {
     return this._inputDimensions[batchIdx][0]
   }
 
-  public getInputWidth(batchIdx: number): number {
+  public getInputWidth (batchIdx: number): number {
     return this._inputDimensions[batchIdx][1]
   }
 
-  public getReshapedInputDimensions(batchIdx: number): Dimensions {
+  public getReshapedInputDimensions (batchIdx: number): Dimensions {
     if (typeof this.inputSize !== 'number') {
       throw new Error('getReshapedInputDimensions - inputSize not set, toBatchTensor has not been called yet')
     }
@@ -118,12 +117,10 @@ export class NetInput {
    * both sides of the minor dimension oof the image.
    * @returns The batch tensor.
    */
-  public toBatchTensor(inputSize: number, isCenterInputs: boolean = true): tf.Tensor4D {
-
+  public toBatchTensor (inputSize: number, isCenterInputs: boolean = true): tf.Tensor4D {
     this._inputSize = inputSize
 
     return tf.tidy(() => {
-
       const inputTensors = range(this.batchSize, 0, 1).map(batchIdx => {
         const input = this.getInput(batchIdx)
 

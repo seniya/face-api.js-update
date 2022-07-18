@@ -1,13 +1,12 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { disposeUnusedWeightTensors, ParamMapping } from '../common';
-import { loadParamsFactory } from './loadParamsFactory';
-import { FaceFeatureExtractorParams } from './types';
+import { disposeUnusedWeightTensors, ParamMapping } from '../common'
+import { loadParamsFactory } from './loadParamsFactory'
+import { FaceFeatureExtractorParams } from './types'
 
-export function extractParamsFromWeigthMap(
+export function extractParamsFromWeigthMap (
   weightMap: tf.NamedTensorMap
 ): { params: FaceFeatureExtractorParams, paramMappings: ParamMapping[] } {
-
   const paramMappings: ParamMapping[] = []
 
   const {

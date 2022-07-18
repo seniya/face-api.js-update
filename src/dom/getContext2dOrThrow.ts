@@ -1,8 +1,7 @@
-import { env } from '../env';
-import { resolveInput } from './resolveInput';
+import { env } from '../env'
+import { resolveInput } from './resolveInput'
 
-export function getContext2dOrThrow(canvasArg: string | HTMLCanvasElement | CanvasRenderingContext2D): CanvasRenderingContext2D {
-
+export function getContext2dOrThrow (canvasArg: string | HTMLCanvasElement | CanvasRenderingContext2D): CanvasRenderingContext2D {
   const { Canvas, CanvasRenderingContext2D } = env.getEnv()
 
   if (canvasArg instanceof CanvasRenderingContext2D) {

@@ -1,15 +1,13 @@
-import * as tf from '@tensorflow/tfjs-core';
+import * as tf from '@tensorflow/tfjs-core'
 
-import { convLayer } from '../common';
-import { BoxPredictionParams } from './types';
+import { convLayer } from '../common'
+import { BoxPredictionParams } from './types'
 
-
-export function boxPredictionLayer(
+export function boxPredictionLayer (
   x: tf.Tensor4D,
   params: BoxPredictionParams
 ) {
   return tf.tidy(() => {
-
     const batchSize = x.shape[0]
 
     const boxPredictionEncoding = tf.reshape(
