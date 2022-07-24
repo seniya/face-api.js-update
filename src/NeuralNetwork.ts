@@ -137,7 +137,8 @@ export abstract class NeuralNetwork<TNetParams> {
     }
 
     const result = paramPath.split('/').reduce((res: { nextObj: any, obj?: any, objProp?: string }, objProp) => {
-      if (!res.nextObj.hasOwnProperty(objProp)) {
+      if (!(Object.prototype.hasOwnProperty.call(res.nextObj, 'objProp'))) {
+      // if (!res.nextObj.hasOwnProperty(objProp)) {
         throw new Error(`traversePropertyPath - object does not have property ${objProp}, for path ${paramPath}`)
       }
 

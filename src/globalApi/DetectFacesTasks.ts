@@ -50,6 +50,7 @@ export class DetectAllFacesTask extends DetectFacesTaskBase<FaceDetection[]> {
   }
 
   private runAndExtendWithFaceDetections (): Promise<WithFaceDetection<{}>[]> {
+    // eslint-disable-next-line promise/param-names, no-async-promise-executor
     return new Promise<WithFaceDetection<{}>[]>(async res => {
       const detections = await this.run()
       return res(detections.map(detection => extendWithFaceDetection({}, detection)))
@@ -92,9 +93,10 @@ export class DetectSingleFaceTask extends DetectFacesTaskBase<FaceDetection | un
   }
 
   private runAndExtendWithFaceDetection (): Promise<WithFaceDetection<{}>> {
+    // eslint-disable-next-line promise/param-names, no-async-promise-executor
     return new Promise<WithFaceDetection<{}>>(async res => {
       const detection = await this.run()
-      return res(detection ? extendWithFaceDetection<{}>({}, detection) : undefined)
+      return res(extendWithFaceDetection<{}>({}, detection as FaceDetection))
     })
   }
 

@@ -14,7 +14,7 @@ export class FaceRecognitionNet extends NeuralNetwork<NetParams> {
     super('FaceRecognitionNet')
   }
 
-  public forwardInput (input: NetInput): tf.Tensor2D {
+  public forwardInput (input: NetInput): tf.Tensor2D { // tf.Tensor<tf.Rank> {
     const { params } = this
 
     if (!params) {
@@ -49,7 +49,7 @@ export class FaceRecognitionNet extends NeuralNetwork<NetParams> {
       out = residualDown(out, params.conv256_down_out)
 
       const globalAvg = out.mean([1, 2]) as tf.Tensor2D
-      const fullyConnected = tf.matMul(globalAvg, params.fc)
+      const fullyConnected = tf.matMul(globalAvg, params.fc) as tf.Tensor2D
 
       return fullyConnected
     })

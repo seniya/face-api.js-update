@@ -16,7 +16,8 @@ module.exports = {
     '@typescript-eslint'
   ],
   rules: {
-    camelcase: 'off'
+    camelcase: 'off',
+    'no-useless-constructor': 'off'
   },
   ignorePatterns: [
     'test/**',

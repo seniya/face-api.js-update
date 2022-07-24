@@ -2,7 +2,7 @@ import { createFileSystem } from './createFileSystem'
 import { Environment } from './types'
 
 export function createNodejsEnv (): Environment {
-  const Canvas = global.Canvas || global.HTMLCanvasElement
+  const Canvas = global.HTMLCanvasElement // || global.canvas
   const Image = global.Image || global.HTMLImageElement
 
   const createCanvasElement = function () {
