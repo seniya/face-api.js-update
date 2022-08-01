@@ -118,10 +118,13 @@
       if (!isFaceDetectionModelLoaded()) {
         return
       }
-      const inputImgEl = document.getElementById('inputImg')
+
+      const inputImgEl = $('#inputImg').get(0)
       const options = getFaceDetectorOptions()
+
       const results = await faceapi.detectAllFaces(inputImgEl, options)
-      const canvas = document.getElementById('overlay')
+
+      const canvas = $('#overlay').get(0)
       faceapi.matchDimensions(canvas, inputImgEl)
       faceapi.draw.drawDetections(canvas, faceapi.resizeResults(results, inputImgEl))
     }
@@ -134,12 +137,12 @@
       updateResults()
     }
 
-    document.addEventListener("DOMContentLoaded", function(){
+    $(document).ready(function() {
+      renderNavBar('#navbar', 'face_detection')
       initImageSelectionControls()
       initFaceDetectionControls()
       run()
-    });
-
+    })
   </script>
 </body>
 </html>
